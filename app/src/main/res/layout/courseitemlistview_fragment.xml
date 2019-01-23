@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/termRelativeLayoutId"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/courseRelativeLayoutId"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:elevation="10dp">
@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="@dimen/cardview_compat_inset_shadow"
@@ -24,13 +25,13 @@
         app:cardUseCompatPadding="false">
 
         <LinearLayout
-            android:id="@+id/termLinearLayoutId"
+            android:id="@+id/courseLinearLayoutId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/termTitleTV"
+                android:id="@+id/courseTitleTV"
                 android:layout_width="188dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -41,7 +42,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/termStartTV"
+                android:id="@+id/courseStartTV"
                 android:layout_width="188dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="190dp"
@@ -51,10 +52,10 @@
                 android:textAlignment="center" />
 
             <TextView
-                android:id="@+id/termEndTV"
+                android:id="@+id/courseEndTV"
                 android:layout_width="188dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="190dp"
+                android:layout_marginLeft="190dp"
                 android:layout_marginTop="0dp"
                 android:padding="4dp"
                 android:text="@string/end_date"
@@ -62,4 +63,4 @@
 
         </LinearLayout>
     </android.support.v7.widget.CardView>
-</RelativeLayout>
+ </RelativeLayout>

@@ -3,23 +3,28 @@ package Model;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.NonNull;
 
 import java.util.Date;
 
+import Converter.Converters;
+
 @Entity(tableName = "term_table")
 public class Term {
-    @PrimaryKey(autoGenerate = true)
+
     @NonNull
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int termId;
     private String title;
+    @TypeConverters({Converters.class})
     private Date startDate;
+    @TypeConverters(Converters.class)
     private Date endDate;
 
 
-    public Term(String title, Date startDate, Date endDate) {
-
+    public Term( String title, Date startDate, Date endDate) {
         this.title = title;
         this.startDate = startDate;
         this.endDate = endDate;

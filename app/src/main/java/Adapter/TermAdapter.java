@@ -1,6 +1,7 @@
 package Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -10,19 +11,23 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Course.CourseMainActivity;
 import com.example.jeff.schoolappv2.R;
 
 import java.util.List;
 
-import Model.TermItem;
+import Model.Term;
+
+import static android.support.v4.content.ContextCompat.startActivity;
+
 
 public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
     private Context context;
+    private int itemId;
+    public static List<Term> termLists;
 
-    public static List<TermItem> termLists;
-
-    public TermAdapter(Context context, List<TermItem> termItems) {
+    public TermAdapter(Context context, List<Term> termItems) {
         this.context = context;
         this.termLists = termItems;
     }
@@ -31,7 +36,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
         return context;
     }
 
-    public List<TermItem> getTermList() {
+    public List<Term> getTermList() {
         return termLists;
     }
 
@@ -47,11 +52,12 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder viewHolder, int i) {
 
-        TermItem item = termLists.get(i);
+        Term item = termLists.get(i);
         //Set views for viewHolder to view  itms in termitem_fragment
-        viewHolder.title.setText(item.getTermName());
-        viewHolder.startDate.setText(item.getStartDate());
-        viewHolder.endDate.setText(item.getEndDate());
+        itemId= item.getTermId();
+        viewHolder.title.setText(item.getTitle());
+        viewHolder.startDate.setText(item.getStartDate().toString());
+        viewHolder.endDate.setText(item.getEndDate().toString());
 
     }
 
@@ -67,7 +73,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
 
     //updates the dataset in termlists
-    public  void updateList(TermItem term){
+    public  void updateTermList(Term term){
         this.termLists.add(term);
         notifyDataSetChanged();
 
@@ -95,7 +101,14 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context, "Term clicked", Toast.LENGTH_LONG).show();
+
+                    Toast.makeText(context, "Term " + itemId + " clicked", Toast.LENGTH_LONG).show();
+
+                    //changes screen to courseactivity associated with clicked term
+                    Intent intent = new Intent(getContext(), CourseMainActivity.class);
+                    context.startActivity(intent);
+
+
 
                 }
             });

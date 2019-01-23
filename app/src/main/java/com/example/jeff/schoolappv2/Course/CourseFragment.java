@@ -1,54 +1,53 @@
-package com.example.jeff.schoolappv2;
+package com.example.jeff.schoolappv2.Course;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.R;
+
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import Adapter.CourseAdapter;
 import Adapter.TermAdapter;
-import Model.TermItem;
+import Model.Course;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link TermFragment.OnFragmentInteractionListener} interface
+ * {@link CourseFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link TermFragment#newInstance} factory method to
+ * Use the {@link CourseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class TermFragment extends Fragment {
+public class CourseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final AddTermFragment addTermFragment = new AddTermFragment();
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private List <Course> courseList;
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
     private RecyclerView.Adapter adapter;
-    private List<TermItem> termItems;
 
 
-    public TermFragment() {
+    public CourseFragment() {
         // Required empty public constructor
     }
 
@@ -58,11 +57,11 @@ public class TermFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment TermFragment.
+     * @return A new instance of fragment CourseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static TermFragment newInstance(String param1, String param2) {
-        TermFragment fragment = new TermFragment();
+    public static CourseFragment newInstance(String param1, String param2) {
+        CourseFragment fragment = new CourseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -73,80 +72,45 @@ public class TermFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //sets menu to true
-        setHasOptionsMenu(true);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
-    // loads main menu item selection into view
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main_menu, menu);
-        super.onCreateOptionsMenu(menu, inflater);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        termItems = new ArrayList<>();
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.courseitem_fragment, container, false);
 
-        termItems.add(new TermItem("Spring 2018", "December 2018", "March 2019"));
-        termItems.add(new TermItem("Spring 2018", "December 2018", "March 2019"));
-        termItems.add(new TermItem("Spring 2018", "December 2018", "March 2019"));
-        termItems.add(new TermItem("Spring 2018", "December 2018", "March 2019"));
-        termItems.add(new TermItem("Spring 2018", "December 2018", "March 2019"));
-        termItems.add(new TermItem("Spring 2018", "December 2018", "March 2019"));
+        //add sample test data here
 
-        // inflate fragment view
-        View view = inflater.inflate(R.layout.termitem_fragment, container, false);
+        courseList = new ArrayList<>();
+        Course course1 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11-23-2019), new Date(12-23-2019));
+        Course course2 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11-23-2019), new Date(12-23-2019));
+        Course course3 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11-23-2019), new Date(12-23-2019));
 
+        courseList.add(course1);
+        courseList.add(course2);
+        courseList.add(course3);
 
-        fab = view.findViewById(R.id.termFab);
-        //floating action button on click
+        //initializes recycler view and sets CourseAdapater to information
+        recyclerView = view.findViewById(R.id.courseRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(new CourseAdapter(getContext().getApplicationContext(), courseList));
+
+        fab = view.findViewById(R.id.courseFab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Fab Clicked", Toast.LENGTH_SHORT).show();
-
-                // replaces termFragment view with AddTermFragment
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFrameLayout, addTermFragment);
-                fragmentTransaction.commit();
-
+                Toast.makeText(getContext(), "Course Fab clicked", Toast.LENGTH_SHORT).show();
             }
-
-
         });
 
-        recyclerView = view.findViewById(R.id.termRecyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new TermAdapter(getContext().getApplicationContext(), termItems));
-
-
         return view;
-
-    }
-
-
-    //menu option items selected
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-       switch (item.getItemId()) {
-           case R.id.deleteDataItem:
-               Toast.makeText(getContext(), "Delete Data", Toast.LENGTH_SHORT).show();
-               return true;
-           case R.id.insertDataItem:
-               Toast.makeText(getContext(), "Insert Data", Toast.LENGTH_SHORT).show();
-               return true;
-               default:
-                   return super.onOptionsItemSelected(item);
-       }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
