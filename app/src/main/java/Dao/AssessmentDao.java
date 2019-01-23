@@ -7,6 +7,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 import Model.Assessment;
 import Model.Course;
 
@@ -14,7 +16,7 @@ import Model.Course;
 public interface AssessmentDao {
 
     @Insert
-    void insertAssessment (Assessment assessment);
+    void insertAssessment (Assessment... assessment);
 
     @Update
     void updateAssessment (Assessment assessment);
@@ -26,9 +28,9 @@ public interface AssessmentDao {
     void deleteAllAssessments();
 
     @Query("SELECT * FROM assessment_table")
-    LiveData<Assessment> getAllAssessments();
+    LiveData<List<Assessment>> getAllAssessments();
 
     @Query("SELECT * FROM assessment_table WHERE courseId IS :courseId")
-    LiveData<Assessment> getAllAssessmentsForCourse(int courseId);
+    LiveData<List<Assessment>> getAllAssessmentsForCourse(int courseId);
 
 }

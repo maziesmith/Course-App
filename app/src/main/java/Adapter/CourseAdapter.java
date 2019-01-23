@@ -101,10 +101,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     Toast.makeText(getContext(), "Couse item clicked", Toast.LENGTH_SHORT).show();
 
                     // replace fragment with selected fragment on screen
-                    FragmentManager fm = getFragmentManager();
-                    FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                    fragmentTransaction.replace(R.id.courseMainFrameLayout, CourseMainActivity.courseFragment);
-                    fragmentTransaction.commit();
+
 
 
                 }

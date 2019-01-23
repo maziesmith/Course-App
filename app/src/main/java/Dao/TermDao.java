@@ -7,6 +7,8 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 import Model.Note;
 import Model.Term;
 
@@ -14,7 +16,7 @@ import Model.Term;
 public interface TermDao {
 
     @Insert
-    void insertTerm(Term term);
+    void insertTerm(Term... term);
 
     @Update
     void updateTerm(Term term);
@@ -26,7 +28,7 @@ public interface TermDao {
     void deleteAllTerms();
 
     @Query("SELECT * FROM term_table")
-    LiveData<Term> getAllTerms();
+    LiveData<List<Term>> getAllTerms();
 
 
 }

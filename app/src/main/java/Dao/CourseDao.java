@@ -7,13 +7,15 @@ import android.arch.persistence.room.Insert;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.List;
+
 import Model.Course;
 
 @Dao
 public interface CourseDao {
 
     @Insert
-    void insertCourse(Course course);
+    void insertCourse(Course... course);
 
     @Update
     void updateCourse(Course course);
@@ -25,10 +27,10 @@ public interface CourseDao {
     void deleteAllCourses();
 
     @Query("SELECT * FROM course_table")
-    LiveData<Course> getAllCourses();
+    LiveData<List<Course>> getAllCourses();
 
     @Query("SELECT * FROM course_table WHERE termId IS :termId")
-    LiveData<Course> getAllCoursesForTerms(int termId);
+    LiveData<List<Course>> getAllCoursesForTerms(int termId);
 
 
 }

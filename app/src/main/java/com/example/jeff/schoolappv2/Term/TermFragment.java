@@ -2,6 +2,7 @@ package com.example.jeff.schoolappv2.Term;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -19,14 +20,12 @@ import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import Adapter.TermAdapter;
+import Dao.TermDao;
 import Model.Term;
-import Model.TermItem;
 
 
 /**
@@ -97,24 +96,9 @@ public class TermFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        termItems = new ArrayList<>();
-
-        //insert term sample data here
+        Term term = new Term("Spring 2018", new Date(11/23/2018), new Date(12/25/2018));
 
 
-        Term term1 = new Term("Winter 2019", new Date(11-23-2019),  new Date(12-23-2019));
-        Term term2 = new Term("Winter 2019", new Date(11-23-2019),  new Date(12-23-2019));
-        Term term3 = new Term("Winter 2019", new Date(11-23-2019),  new Date(12-23-2019));
-        Term term4 = new Term("Winter 2019", new Date(11-23-2019),  new Date(12-23-2019));
-        Term term5 = new Term("Winter 2019", new Date(11-23-2019),  new Date(12-23-2019));
-
-
-
-        termItems.add(term1);
-        termItems.add(term2);
-        termItems.add(term3);
-        termItems.add(term4);
-        termItems.add(term5);
 
 
 
@@ -205,4 +189,27 @@ public class TermFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+    private static class PopulateTermDbAsync extends AsyncTask<Term, Void, Void>{
+        private final TermDao termDao;
+
+        private PopulateTermDbAsync(TermDao termDao) {
+            this.termDao = termDao;
+        }
+
+
+        @Override
+        protected Void doInBackground(Term... terms) {
+            termDao.deleteAllTerms();
+            Term term = new Term("Spring 2018", new Date(11/11/2018), new Date(12/12/2018));
+            termDao.insertTerm(term);
+            Term term1 = new Term("Summer 2019", new Date(1/12/2019), new Date(5/12/2019));
+            termDao.insertTerm(term1);
+            return null;
+        }
+    }
+
+
+
 }

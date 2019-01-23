@@ -18,8 +18,6 @@ import java.util.List;
 
 import Model.Term;
 
-import static android.support.v4.content.ContextCompat.startActivity;
-
 
 public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
@@ -54,14 +52,12 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
         Term item = termLists.get(i);
         //Set views for viewHolder to view  itms in termitem_fragment
-        itemId= item.getTermId();
+        itemId = item.getTermId();
         viewHolder.title.setText(item.getTitle());
         viewHolder.startDate.setText(item.getStartDate().toString());
         viewHolder.endDate.setText(item.getEndDate().toString());
 
     }
-
-
 
 
     @Override
@@ -71,14 +67,6 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
     }
 
-
-    //updates the dataset in termlists
-    public  void updateTermList(Term term){
-        this.termLists.add(term);
-        notifyDataSetChanged();
-
-
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -95,9 +83,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
             this.endDate = itemView.findViewById(R.id.termEndTV);
 
 
-
-
-                // allows each item to be individually clicked
+            // allows each item to be individually clicked
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -107,7 +93,6 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                     //changes screen to courseactivity associated with clicked term
                     Intent intent = new Intent(getContext(), CourseMainActivity.class);
                     context.startActivity(intent);
-
 
 
                 }
