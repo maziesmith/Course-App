@@ -7,6 +7,10 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
@@ -27,6 +31,15 @@ public class AddCourseFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private EditText title;
+    private EditText start;
+    private EditText end;
+    private EditText status;
+    private EditText notes;
+    private ImageButton share;
+    private Button save;
+    private Button cancel;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +78,46 @@ public class AddCourseFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.courseaddcourse_fragment, container, false);
+        View view = inflater.inflate(R.layout.courseaddcourse_fragment, container, false);
+
+        title = view.findViewById(R.id.courseNameET);
+        start = view.findViewById(R.id.startDateET);
+        end = view.findViewById(R.id.endDateET);
+        status = view.findViewById(R.id.statusET);
+        share = view.findViewById(R.id.shareIV);
+        notes = view.findViewById(R.id.noteET);
+        save = view.findViewById(R.id.saveBTN);
+        cancel = view.findViewById(R.id.cancelBTN);
+
+        //share button
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Share Button clicked", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+        //save button
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Save Button clicked", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //cancel button
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Cancel Button clicked", Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        return view;
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

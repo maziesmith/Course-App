@@ -1,9 +1,12 @@
 package com.example.jeff.schoolappv2.Term;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -25,7 +28,10 @@ import java.util.List;
 
 import Adapter.TermAdapter;
 import Dao.TermDao;
+import Database.AppDatabase;
+import Model.Course;
 import Model.Term;
+import ViewModel.TermViewModel;
 
 
 /**
@@ -50,6 +56,8 @@ public class TermFragment extends Fragment {
     private FloatingActionButton fab;
     private RecyclerView.Adapter adapter;
     private List<Term> termItems;
+    private TermViewModel termViewModel;
+    private AppDatabase appDatabase;
 
 
     public TermFragment() {
@@ -74,6 +82,7 @@ public class TermFragment extends Fragment {
         return fragment;
     }
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +92,8 @@ public class TermFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     // loads main menu item selection into view
@@ -96,17 +107,9 @@ public class TermFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        Term term = new Term("Spring 2018", new Date(11/23/2018), new Date(12/25/2018));
-
-
-
-
-
 
         // inflate fragment view
         View view = inflater.inflate(R.layout.termitem_fragment, container, false);
-
-
         fab = view.findViewById(R.id.termFab);
         //floating action button on click
         fab.setOnClickListener(new View.OnClickListener() {
@@ -119,16 +122,25 @@ public class TermFragment extends Fragment {
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 fragmentTransaction.replace(R.id.mainFrameLayout, addTermFragment);
                 fragmentTransaction.commit();
-
             }
-
-
         });
 
         recyclerView = view.findViewById(R.id.termRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new TermAdapter(getContext().getApplicationContext(), termItems));
+
+        final TermAdapter adapter = new TermAdapter();
+        recyclerView.setAdapter(adapter);
+
+        //gets termviewmodel class
+        termViewModel = ViewModelProviders.of(this).get(TermViewModel.class);
+        termViewModel.getAllTerms().observe(this, new Observer<List<Term>>() {
+            @Override
+            public void onChanged(@Nullable List<Term> terms) {
+                //update the recyclerview and sets the term in the list
+                adapter.setTerms(terms);
+            }
+        });
 
 
         return view;
@@ -139,16 +151,29 @@ public class TermFragment extends Fragment {
     //menu option items selected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-       switch (item.getItemId()) {
-           case R.id.deleteDataItem:
-               Toast.makeText(getContext(), "Delete Data", Toast.LENGTH_SHORT).show();
-               return true;
-           case R.id.insertDataItem:
-               Toast.makeText(getContext(), "Insert Data", Toast.LENGTH_SHORT).show();
-               return true;
-               default:
-                   return super.onOptionsItemSelected(item);
-       }
+        switch (item.getItemId()) {
+            case R.id.deleteDataItem:
+                Toast.makeText(getContext(), "Delete Data", Toast.LENGTH_SHORT).show();
+                termViewModel.deleteAll();
+                return true;
+            case R.id.insertDataItem:
+                Term term = new Term("Test 2018", new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
+                Term term1 = new Term("Test 2019", new Date(5 / 1 / 2019), new Date(7 / 11 / 2019));
+                Term term2 = new Term("Test 2019", new Date(8 / 2 / 2019), new Date(10 / 12 / 2019));
+                Term term3 = new Term("Test 2019", new Date(11 / 5 / 2019), new Date(1 / 6 / 2020));
+                Course course = new Course(term.getTermId(), "Math101", "Inprogress", "this is a note",
+                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
+
+                termViewModel.insert(term);
+                termViewModel.insert(term1);
+                termViewModel.insert(term2);
+                termViewModel.insert(term3);
+                Toast.makeText(getContext(), "Insert Data", Toast.LENGTH_SHORT).show();
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -191,7 +216,7 @@ public class TermFragment extends Fragment {
     }
 
 
-    private static class PopulateTermDbAsync extends AsyncTask<Term, Void, Void>{
+    private static class PopulateTermDbAsync extends AsyncTask<Term, Void, Void> {
         private final TermDao termDao;
 
         private PopulateTermDbAsync(TermDao termDao) {
@@ -202,14 +227,13 @@ public class TermFragment extends Fragment {
         @Override
         protected Void doInBackground(Term... terms) {
             termDao.deleteAllTerms();
-            Term term = new Term("Spring 2018", new Date(11/11/2018), new Date(12/12/2018));
+            Term term = new Term("Spring 2018", new Date(11 / 11 / 2018), new Date(12 / 12 / 2018));
             termDao.insertTerm(term);
-            Term term1 = new Term("Summer 2019", new Date(1/12/2019), new Date(5/12/2019));
+            Term term1 = new Term("Summer 2019", new Date(1 / 12 / 2019), new Date(5 / 12 / 2019));
             termDao.insertTerm(term1);
             return null;
         }
     }
-
 
 
 }

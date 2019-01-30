@@ -9,14 +9,13 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import Model.Note;
 import Model.Term;
 
 @Dao
 public interface TermDao {
 
     @Insert
-    void insertTerm(Term... term);
+    void insertTerm(Term term);
 
     @Update
     void updateTerm(Term term);

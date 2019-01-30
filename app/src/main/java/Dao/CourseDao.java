@@ -15,7 +15,7 @@ import Model.Course;
 public interface CourseDao {
 
     @Insert
-    void insertCourse(Course... course);
+    void insertCourse(Course course);
 
     @Update
     void updateCourse(Course course);

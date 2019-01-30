@@ -26,9 +26,12 @@ public class Assessment {
     private String notes;
 
 
-
-    public Assessment() {
-
+    public Assessment(int courseId, String type, String title, Date dueDate, String notes) {
+        this.courseId = courseId;
+        this.type = type;
+        this.title = title;
+        this.dueDate = dueDate;
+        this.notes = notes;
     }
 
     public int getAssessmentId() {

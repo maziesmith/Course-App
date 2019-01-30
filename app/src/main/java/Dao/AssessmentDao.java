@@ -16,7 +16,7 @@ import Model.Course;
 public interface AssessmentDao {
 
     @Insert
-    void insertAssessment (Assessment... assessment);
+    void insertAssessment (Assessment assessment);
 
     @Update
     void updateAssessment (Assessment assessment);

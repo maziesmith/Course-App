@@ -26,9 +26,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     private List<Course> courseList;
     private int courseId;
 
-    public CourseAdapter(Context context, List<Course> courseList) {
-        this.context = context;
-        this.courseList = courseList;
+    public CourseAdapter() {
+
     }
 
     public Context getContext() {
@@ -45,13 +44,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         //inflates courseItemListview to be displayed on screen
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.courseitemlistview_fragment, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view);
-        Course course1 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11 - 23 - 2019), new Date(12 - 23 - 2019));
-        Course course2 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11 - 23 - 2019), new Date(12 - 23 - 2019));
-        Course course3 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11 - 23 - 2019), new Date(12 - 23 - 2019));
 
-        courseList.add(course1);
-        courseList.add(course2);
-        courseList.add(course3);
+       //add courses here
+
         return viewHolder;
 
     }
@@ -76,8 +71,8 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
 
     //updates the dataset in courselist
-    public void updateCourseList(Course course) {
-        this.courseList.add(course);
+    public void setCourses(List<Course> courses){
+        courseList = courses;
         notifyDataSetChanged();
     }
 
@@ -89,6 +84,10 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            //sets i to adapter position
+            int i = getAdapterPosition();
+            //sets current course to currently selected course
+            Course currentCourse = courseList.get(i);
             courseTitle = itemView.findViewById(R.id.courseTitleTV);
             courseStart = itemView.findViewById(R.id.courseStartTV);
             courseEnd = itemView.findViewById(R.id.courseEndTV);

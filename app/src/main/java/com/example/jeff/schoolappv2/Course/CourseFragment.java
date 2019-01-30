@@ -1,5 +1,6 @@
 package com.example.jeff.schoolappv2.Course;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,7 +21,9 @@ import java.util.List;
 
 import Adapter.CourseAdapter;
 import Adapter.TermAdapter;
+import Database.AppDatabase;
 import Model.Course;
+import ViewModel.CourseViewModel;
 
 
 /**
@@ -45,6 +48,9 @@ public class CourseFragment extends Fragment {
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
     private RecyclerView.Adapter adapter;
+    private CourseViewModel courseViewModel;
+    private AppDatabase appDatabase;
+
 
 
     public CourseFragment() {
@@ -85,22 +91,6 @@ public class CourseFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.courseitem_fragment, container, false);
 
-        //add sample test data here
-
-        courseList = new ArrayList<>();
-        Course course1 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11-23-2019), new Date(12-23-2019));
-        Course course2 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11-23-2019), new Date(12-23-2019));
-        Course course3 = new Course(1, "Course 1", "in progress", 2, 1, new Date(11-23-2019), new Date(12-23-2019));
-
-        courseList.add(course1);
-        courseList.add(course2);
-        courseList.add(course3);
-
-        //initializes recycler view and sets CourseAdapater to information
-        recyclerView = view.findViewById(R.id.courseRecyclerView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(new CourseAdapter(getContext().getApplicationContext(), courseList));
 
         fab = view.findViewById(R.id.courseFab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -110,7 +100,21 @@ public class CourseFragment extends Fragment {
             }
         });
 
+        //initializes recycler view and sets CourseAdapater to information
+        recyclerView = view.findViewById(R.id.courseRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        final CourseAdapter adapter = new CourseAdapter();
+        recyclerView.setAdapter(adapter);
+
+
+        courseViewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
+        courseViewModel.getAllCoursesByTerm(TermAdapter.currentTerm.getTermId());
+
+
         return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

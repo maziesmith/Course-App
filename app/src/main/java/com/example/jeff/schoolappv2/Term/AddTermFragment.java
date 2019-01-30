@@ -1,8 +1,11 @@
 package com.example.jeff.schoolappv2.Term;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -15,8 +18,13 @@ import android.widget.TextView;
 
 import com.example.jeff.schoolappv2.R;
 
+import java.time.format.DateTimeFormatterBuilder;
+import java.util.Date;
+import java.util.List;
+
 import Adapter.TermAdapter;
-import Model.TermItem;
+import Model.Term;
+import ViewModel.TermViewModel;
 
 
 /**
@@ -45,9 +53,8 @@ public class AddTermFragment extends Fragment {
     private Button save;
 
     private TermAdapter termAdapter;
-
-
-
+    private TermViewModel termViewModel;
+    private Term term;
 
 
     private OnFragmentInteractionListener mListener;
@@ -77,6 +84,7 @@ public class AddTermFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -89,7 +97,7 @@ public class AddTermFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.termaddterm_fragment, container, false);
 
-        addTerm = view.findViewById(R.id.addTermTV);
+        addTerm = view.findViewById(R.id.editTermTV);
         termName = view.findViewById(R.id.termNameET);
         termStart = view.findViewById(R.id.termStartET);
         termEnd = view.findViewById(R.id.termEndET);
@@ -101,18 +109,13 @@ public class AddTermFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String name = termName.getText().toString();
-                String start = termStart.getText().toString();
-                String end = termEnd.getText().toString();
+                Date start = (Date) termStart.getText();
+                Date end = (Date) termEnd.getText();
 
-
-                TermItem termItem = new TermItem(name, start, end);
-
-
-
-
-
-
+                term = new Term(name, start, end );
+                termViewModel.insert(term);
 
 
 

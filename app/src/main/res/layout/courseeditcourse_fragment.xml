@@ -21,10 +21,10 @@
 
 
             <TextView
-                android:id="@+id/addCourseTV"
+                android:id="@+id/editCourseTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Add Course"
+                android:text="Edit Course"
                 android:textSize="24sp"
                 tools:layout_editor_absoluteX="143dp"
                 tools:layout_editor_absoluteY="0dp" />
@@ -90,7 +90,7 @@
                 tools:layout_editor_absoluteY="40dp" />
 
             <EditText
-                android:id="@+id/startDateET"
+                android:id="@+id/startET"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -100,7 +100,7 @@
                 tools:layout_editor_absoluteY="85dp" />
 
             <EditText
-                android:id="@+id/endDateET"
+                android:id="@+id/endET"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ems="10"
@@ -117,8 +117,8 @@
                 tools:layout_editor_absoluteX="334dp"
                 tools:layout_editor_absoluteY="276dp" />
 
-            <EditText
-                android:id="@+id/statusET"
+            <Spinner
+                android:id="@+id/statusDD"
                 android:layout_width="208dp"
                 android:layout_height="33dp"
                 android:spinnerMode="dropdown"

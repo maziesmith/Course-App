@@ -12,8 +12,7 @@ import Converter.Converters;
 
 @Entity(tableName = "course_table")
 @ForeignKey(entity = Term.class, parentColumns = "id", childColumns = "termId")
-//@ForeignKey(entity = Note.class, parentColumns = "id", childColumns ="noteId")
-//@ForeignKey(entity = Mentor.class, parentColumns ="id", childColumns ="mentorId" )
+
 public class Course {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
@@ -22,22 +21,18 @@ public class Course {
     private int termId;
     private String title;
     private String status;
-    @ColumnInfo(name = "mentorId")
-    private int mentorId;
-    @ColumnInfo(name = "noteId")
-    private int noteId;
+    @ColumnInfo(name = "note")
+    private String note;
     @TypeConverters(Converters.class)
     private Date startDate;
     @TypeConverters(Converters.class)
     private Date endDate;
 
-
-    public Course(int termId, String title, String status, int mentorId, int noteId, Date startDate, Date endDate) {
+    public Course( int termId, String title, String status, String note, Date startDate, Date endDate) {
         this.termId = termId;
         this.title = title;
         this.status = status;
-        this.mentorId = mentorId;
-        this.noteId = noteId;
+        this.note = note;
         this.startDate = startDate;
         this.endDate = endDate;
     }
@@ -71,28 +66,16 @@ public class Course {
     }
 
     public void setStatus(String status) {
-
         this.status = status;
     }
 
-    public int getMentorId() {
 
-        return mentorId;
+    public String getNote() {
+        return note;
     }
 
-    public void setMentorId(int mentorId) {
-
-        this.mentorId = mentorId;
-    }
-
-    public int getNoteId() {
-
-        return noteId;
-    }
-
-    public void setNoteId(int noteId) {
-
-        this.noteId = noteId;
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public Date getStartDate() {
