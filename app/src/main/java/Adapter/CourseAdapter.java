@@ -2,31 +2,34 @@ package Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.Course.CourseMainActivity;
 import com.example.jeff.schoolappv2.R;
-import com.example.jeff.schoolappv2.Term.TermMainActivity;
 
-import java.util.Date;
 import java.util.List;
 
 import Model.Course;
+import ViewModel.CourseViewModel;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder> {
 
     private Context context;
     private List<Course> courseList;
-    private int courseId;
+    private Course currentCourse;
+    CourseMainActivity courseMainActivity = new CourseMainActivity();
+    CourseViewModel courseViewModel;
+
 
     public CourseAdapter() {
+
 
     }
 
@@ -42,36 +45,43 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         //inflates courseItemListview to be displayed on screen
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.courseitemlistview_fragment, viewGroup, false);
-        ViewHolder viewHolder = new ViewHolder(view);
+        View view = LayoutInflater.from(viewGroup.getContext())
+                .inflate(R.layout.courseitemlistview_fragment, viewGroup, false);
+        return new ViewHolder(view);
 
-       //add courses here
+        //add courses here
 
-        return viewHolder;
 
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+        int termId = courseMainActivity.getTermId();
+        courseViewModel.getAllCoursesByTerm(termId);
+        currentCourse = courseList.get(termId);
 
-        Course course = courseList.get(i);
+        ;
         //Set views for viewHolder to view  itms in termitem_fragment
-        courseId = course.getCourseId();
-        viewHolder.courseStart.setText(course.getStartDate().toString());
-        viewHolder.courseTitle.setText(course.getTitle());
-        viewHolder.courseEnd.setText(course.getEndDate().toString());
+
+
+
+
+        viewHolder.courseStart.setText(currentCourse.getStartDate().toString());
+        viewHolder.courseTitle.setText(currentCourse.getTitle());
+        viewHolder.courseEnd.setText(currentCourse.getEndDate().toString());
 
     }
 
+    //returns courselist size
 
     @Override
     public int getItemCount() {
-        return 0;
+        return courseList.size();
     }
 
 
-    //updates the dataset in courselist
-    public void setCourses(List<Course> courses){
+    //updates the data list
+    public void setCourses(List<Course> courses) {
         courseList = courses;
         notifyDataSetChanged();
     }
@@ -81,13 +91,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         TextView courseTitle;
         TextView courseStart;
         TextView courseEnd;
+        FloatingActionButton floatingActionButton;
+        LinearLayout linearLayout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            //sets i to adapter position
-            int i = getAdapterPosition();
-            //sets current course to currently selected course
-            Course currentCourse = courseList.get(i);
+
             courseTitle = itemView.findViewById(R.id.courseTitleTV);
             courseStart = itemView.findViewById(R.id.courseStartTV);
             courseEnd = itemView.findViewById(R.id.courseEndTV);
@@ -97,10 +106,13 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "Couse item clicked", Toast.LENGTH_SHORT).show();
+                    //sets i to adapter position
+                    int i = getAdapterPosition();
+                    //sets current course to currently selected course
+                    Course currentCourse = courseList.get(i);
+                    Toast.makeText(getContext(), "Course " + currentCourse + " clicked", Toast.LENGTH_SHORT).show();
 
                     // replace fragment with selected fragment on screen
-
 
 
                 }

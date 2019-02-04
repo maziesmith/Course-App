@@ -26,11 +26,13 @@ import com.example.jeff.schoolappv2.R;
 import java.util.Date;
 import java.util.List;
 
+import Adapter.CourseAdapter;
 import Adapter.TermAdapter;
 import Dao.TermDao;
 import Database.AppDatabase;
 import Model.Course;
 import Model.Term;
+import ViewModel.CourseViewModel;
 import ViewModel.TermViewModel;
 
 
@@ -55,9 +57,12 @@ public class TermFragment extends Fragment {
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
     private RecyclerView.Adapter adapter;
+    private RecyclerView.Adapter CourseAdap;
     private List<Term> termItems;
     private TermViewModel termViewModel;
     private AppDatabase appDatabase;
+    private CourseViewModel courseViewModel;
+
 
 
     public TermFragment() {
@@ -143,6 +148,7 @@ public class TermFragment extends Fragment {
         });
 
 
+
         return view;
 
     }
@@ -161,13 +167,25 @@ public class TermFragment extends Fragment {
                 Term term1 = new Term("Test 2019", new Date(5 / 1 / 2019), new Date(7 / 11 / 2019));
                 Term term2 = new Term("Test 2019", new Date(8 / 2 / 2019), new Date(10 / 12 / 2019));
                 Term term3 = new Term("Test 2019", new Date(11 / 5 / 2019), new Date(1 / 6 / 2020));
-                Course course = new Course(term.getTermId(), "Math101", "Inprogress", "this is a note",
-                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
+
 
                 termViewModel.insert(term);
                 termViewModel.insert(term1);
                 termViewModel.insert(term2);
                 termViewModel.insert(term3);
+
+                Course course = new Course(term.getTermId(), "Math101", "Inprogress", "this is a note",
+                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
+                Course course1 = new Course(term1.getTermId(), "Math101", "Inprogress", "this is a note",
+                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
+                Course course2 = new Course(term2.getTermId(), "Math101", "Inprogress", "this is a note",
+                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
+                Course course3 = new Course(term3.getTermId(), "Math101", "Inprogress", "this is a note",
+                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
+                courseViewModel.insert(course);
+                courseViewModel.insert(course1);
+                courseViewModel.insert(course2);
+                courseViewModel.insert(course3);
                 Toast.makeText(getContext(), "Insert Data", Toast.LENGTH_SHORT).show();
 
                 return true;
@@ -216,24 +234,7 @@ public class TermFragment extends Fragment {
     }
 
 
-    private static class PopulateTermDbAsync extends AsyncTask<Term, Void, Void> {
-        private final TermDao termDao;
 
-        private PopulateTermDbAsync(TermDao termDao) {
-            this.termDao = termDao;
-        }
-
-
-        @Override
-        protected Void doInBackground(Term... terms) {
-            termDao.deleteAllTerms();
-            Term term = new Term("Spring 2018", new Date(11 / 11 / 2018), new Date(12 / 12 / 2018));
-            termDao.insertTerm(term);
-            Term term1 = new Term("Summer 2019", new Date(1 / 12 / 2019), new Date(5 / 12 / 2019));
-            termDao.insertTerm(term1);
-            return null;
-        }
-    }
 
 
 }

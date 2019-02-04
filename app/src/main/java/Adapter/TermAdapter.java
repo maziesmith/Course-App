@@ -2,7 +2,6 @@ package Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
@@ -20,8 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Model.Term;
-
-import static android.widget.Toast.*;
 
 
 public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
@@ -66,12 +63,14 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     }
 
 
+    //returns termLists size
+
     @Override
     public int getItemCount() {
-        //returns termLists size
         return termLists.size();
     }
 
+    //updates data list
     public void setTerms(List<Term> terms) {
         termLists = terms;
         notifyDataSetChanged();
@@ -101,8 +100,14 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                     int i = getAdapterPosition();
                     //sets currentterm to currently clicked term
                     currentTerm = termLists.get(i);
-                    Intent intent = new Intent(getContext(), CourseMainActivity.class);
-                    Toast.makeText(v.getContext(), "Term "+ currentTerm.getTermId() + " clicked", Toast.LENGTH_SHORT).show();
+                    currentTerm.getTermId();
+                    context = v.getContext();
+                    //creates new intent and passes termId to intent extra to be used in new adapater recyclerview
+                    Intent intent = new Intent(context, CourseMainActivity.class);
+                    intent.putExtra("TERM_ID", currentTerm.getTermId());
+                    context.startActivity(intent);
+
+                    Toast.makeText(v.getContext(), "Term " + currentTerm.getTermId() + " clicked", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -110,4 +115,5 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
 
     }
+
 }

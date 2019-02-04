@@ -1,11 +1,16 @@
 package com.example.jeff.schoolappv2.Course;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,12 +20,9 @@ import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import Adapter.CourseAdapter;
-import Adapter.TermAdapter;
 import Database.AppDatabase;
 import Model.Course;
 import ViewModel.CourseViewModel;
@@ -41,16 +43,18 @@ public class CourseFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+    private static final AddCourseFragment sAddCourseFragment = new AddCourseFragment();
+
     private String mParam1;
     private String mParam2;
-    private List <Course> courseList;
+    private LiveData<List<Course>> courseList;
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
-    private RecyclerView.Adapter adapter;
+    private CourseAdapter courseAdapter;
     private CourseViewModel courseViewModel;
+    private CourseMainActivity courseMainActivity = new CourseMainActivity();
     private AppDatabase appDatabase;
-
 
 
     public CourseFragment() {
@@ -82,6 +86,8 @@ public class CourseFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        Toast.makeText(getContext(), "TEST " + courseMainActivity.getTermId(), Toast.LENGTH_SHORT).show();
+
     }
 
     @Override
@@ -96,21 +102,32 @@ public class CourseFragment extends Fragment {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "Course Fab clicked", Toast.LENGTH_SHORT).show();
+                // replaces termFragment view with AddTermFragment
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.courseMainFrameLayout, sAddCourseFragment);
+                fragmentTransaction.commit();
             }
         });
 
         //initializes recycler view and sets CourseAdapater to information
+        courseList = courseViewModel.getAllCoursesByTerm(courseMainActivity.getTermId());
         recyclerView = view.findViewById(R.id.courseRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
 
         final CourseAdapter adapter = new CourseAdapter();
         recyclerView.setAdapter(adapter);
 
 
         courseViewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
-        courseViewModel.getAllCoursesByTerm(TermAdapter.currentTerm.getTermId());
+        courseViewModel.getAllCoursesByTerm(courseMainActivity.getTermId()).observe(this, new Observer<List<Course>>() {
+            @Override
+            public void onChanged(@Nullable List<Course> courses) {
+                courseAdapter.setCourses(courses);
+            }
+        });
 
 
         return view;
@@ -155,4 +172,6 @@ public class CourseFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }
+

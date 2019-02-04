@@ -26,7 +26,7 @@ public class CourseViewModel extends AndroidViewModel {
         return allCourses;
     }
 
-    public LiveData<List<Course>>getAllCoursesByTerm(int termId){
+    public LiveData<List<Course>> getAllCoursesByTerm(int termId) {
         return appRepository.getAllCoursesByTerm(termId);
 
     }
@@ -35,6 +35,7 @@ public class CourseViewModel extends AndroidViewModel {
         appRepository.insertCourse(course);
 
     }
+
 
     public void delete(Course course) {
         appRepository.deleteCourse(course);

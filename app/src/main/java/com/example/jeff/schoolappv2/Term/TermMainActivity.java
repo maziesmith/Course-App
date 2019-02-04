@@ -2,7 +2,6 @@ package com.example.jeff.schoolappv2.Term;
 
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
@@ -31,17 +30,5 @@ public class TermMainActivity extends AppCompatActivity implements TermFragment.
 
     }
 
-
-    // replace fragment with selected fragment on screen
-    public static void replaceFragment(int i, Fragment fragment) {
-
-
-    }
-
-    //method to add fragment to displayed screen
-    public static void addFragment(int i, Fragment fragment) {
-
-
-    }
 
 }

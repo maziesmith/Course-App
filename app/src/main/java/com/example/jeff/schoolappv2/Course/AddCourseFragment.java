@@ -14,15 +14,17 @@ import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
+import static com.example.jeff.schoolappv2.Course.AddCourseFragment.*;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddCourseFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link AddCourseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddCourseFragment extends Fragment {
+public class AddCourseFragment extends Fragment  {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -143,6 +145,7 @@ public class AddCourseFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
 
     /**
      * This interface must be implemented by activities that contain this
