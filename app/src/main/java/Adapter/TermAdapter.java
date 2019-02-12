@@ -10,11 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.Course.CourseMainActivity;
 import com.example.jeff.schoolappv2.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +26,8 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
     private Context context;
     private List<Term> termLists = new ArrayList<>();
-    public static Term currentTerm;
+    public static Term sCurrentTerm;
+    public static int sCurrentTermId;
 
 
     public TermAdapter() {
@@ -47,7 +49,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         //inflates termitemlistview to be displayed on screen
         View view = LayoutInflater.from(viewGroup.getContext())
-                .inflate(R.layout.termitemlistview_fragment, viewGroup, false);
+                .inflate(R.layout.item_termview, viewGroup, false);
 
         return new ViewHolder(view);
     }
@@ -55,10 +57,16 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         //gets position of currentTerm
-        currentTerm = termLists.get(i);
-        viewHolder.title.setText(currentTerm.getTitle());
-        viewHolder.startDate.setText(currentTerm.getStartDate().toString());
-        viewHolder.endDate.setText(currentTerm.getEndDate().toString());
+        sCurrentTerm = termLists.get(i);
+        viewHolder.title.setText(sCurrentTerm.getTitle());
+
+        //formats the date to be displayed as string
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        String startDateString = formatter.format(sCurrentTerm.getStartDate());
+        String endDateString = formatter.format(sCurrentTerm.getEndDate());
+
+        viewHolder.startDate.setText(startDateString);
+        viewHolder.endDate.setText(endDateString);
 
     }
 
@@ -99,15 +107,26 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                     //sets getadapterposition to int i
                     int i = getAdapterPosition();
                     //sets currentterm to currently clicked term
-                    currentTerm = termLists.get(i);
-                    currentTerm.getTermId();
+                    sCurrentTerm = termLists.get(i);
+                    sCurrentTermId = sCurrentTerm.getTermId();
                     context = v.getContext();
                     //creates new intent and passes termId to intent extra to be used in new adapater recyclerview
                     Intent intent = new Intent(context, CourseMainActivity.class);
-                    intent.putExtra("TERM_ID", currentTerm.getTermId());
                     context.startActivity(intent);
 
-                    Toast.makeText(v.getContext(), "Term " + currentTerm.getTermId() + " clicked", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //long click to delete Term and all associated courses/assments/mentors
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    //method to delete data from term by termid
+                    //course by termid
+                    //mentor by courseid
+                    //assessment by courseId
+
+                    return false;
                 }
             });
 

@@ -7,7 +7,12 @@
     <string name="InsertData">Insert Data</string>
     <string name="deleteData">Delete Data</string>
     <string name="term_title">Term Title</string>
-    <string name="start_date">Start Date</string>
     <string name="end_date">End Date</string>
+    <string name="notes">Notes</string>
+    <string name="add_notes_here">add notes here..</string>
+    <string name="phone">Phone</string>
+    <string name="email">Email</string>
+    <string name="course_name">Course Name</string>
+    <string name="start_date">Start Date</string>
 
 </resources>

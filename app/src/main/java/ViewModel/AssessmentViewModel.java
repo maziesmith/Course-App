@@ -7,8 +7,6 @@ import android.support.annotation.NonNull;
 
 import java.util.List;
 
-import Dao.AssessmentDao;
-import Database.AppDatabase;
 import Model.Assessment;
 import Repoisitory.AppRepository;
 
@@ -16,8 +14,6 @@ import Repoisitory.AppRepository;
 public class AssessmentViewModel extends AndroidViewModel {
     private AppRepository appRepository;
     private LiveData<List<Assessment>> allAssessments;
-
-
 
 
     public AssessmentViewModel(@NonNull Application application) {
@@ -31,14 +27,19 @@ public class AssessmentViewModel extends AndroidViewModel {
         return allAssessments;
     }
 
-    public void insert(Assessment assessment){
+    public LiveData<List<Assessment>> getAllAssessmentsByCourse(int courseId) {
+        return appRepository.getAllAssessmentsByCourse(courseId);
+    }
+
+    public void insert(Assessment assessment) {
         appRepository.insertAssessment(assessment);
     }
 
-    public void update(Assessment assessment){
+    public void update(Assessment assessment) {
         appRepository.updateAssessment(assessment);
     }
-    public void delete (Assessment assessment){
+
+    public void delete(Assessment assessment) {
         appRepository.deleteAssessment(assessment);
     }
 }

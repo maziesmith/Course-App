@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/courseAssessmentRelativeLayout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:elevation="10dp">
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/assessmentView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
+        android:padding="50px"
+        android:paddingBottom="10px">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/assessmentNameTV"
+                android:layout_width="316dp"
+                android:layout_height="wrap_content"
+                android:text="Assessment Name"
+                android:textAlignment="center"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/assessmentTypeTV"
+                android:layout_width="316dp"
+                android:layout_height="wrap_content"
+                android:text="Assessment Type"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="31dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/assessmentDueDateTV"
+                    android:layout_width="266dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Due Date"
+                    android:textAlignment="center"
+                    android:textSize="18sp" />
+
+                <ImageButton
+                    android:id="@+id/editAssessmentIB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/ic_edit_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/deleteAssesmentIB"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    app:srcCompat="@drawable/ic_delete_black_24dp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</RelativeLayout>

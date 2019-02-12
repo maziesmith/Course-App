@@ -9,6 +9,7 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import Model.Course;
 import Model.Mentor;
 
 @Dao
@@ -30,7 +31,9 @@ public interface MentorDao {
     @Query("SELECT * FROM mentor_table")
     LiveData<List<Mentor>> getAllMentors();
 
-    @Query("SELECT * FROM mentor_table WHERE courseId IS :courseId")
+    @Query("SELECT * FROM mentor_table WHERE courseId=:courseId")
     LiveData<List<Mentor>> getAllMentorsForCourse(int courseId);
 
 }
+
+

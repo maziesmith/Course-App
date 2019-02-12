@@ -1,41 +1,27 @@
-package com.example.jeff.schoolappv2.Term;
+package com.example.jeff.schoolappv2.Mentor;
 
-import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import Adapter.TermAdapter;
-import Model.Term;
-import ViewModel.TermViewModel;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link AddTermFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddTermFragment#newInstance} factory method to
+ * Use the {@link AddMentorFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddTermFragment extends Fragment {
+public class AddMentorFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,21 +31,16 @@ public class AddTermFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private TextView addTerm;
-    private EditText termName;
-    private EditText termStart;
-    private EditText termEnd;
+    private EditText mentorName;
+    private EditText mentorPhone;
+    private EditText mentorEmail;
     private Button cancel;
     private Button save;
-    private LiveData<List<Term>> terms;
-    private TermAdapter termAdapter;
-    private TermViewModel termViewModel;
-    private Term term;
 
 
     private OnFragmentInteractionListener mListener;
 
-    public AddTermFragment() {
+    public AddMentorFragment() {
         // Required empty public constructor
     }
 
@@ -69,11 +50,11 @@ public class AddTermFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddTermFragment.
+     * @return A new instance of fragment AddMentorFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddTermFragment newInstance(String param1, String param2) {
-        AddTermFragment fragment = new AddTermFragment();
+    public static AddMentorFragment newInstance(String param1, String param2) {
+        AddMentorFragment fragment = new AddMentorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -84,7 +65,6 @@ public class AddTermFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -95,65 +75,33 @@ public class AddTermFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_termaddterm, container, false);
+        View view = inflater.inflate(R.layout.fragment_mentoraddmentor, container, false);
+        mentorName = view.findViewById(R.id.mentorNameET);
+        mentorEmail = view.findViewById(R.id.mentorEmailET);
+        mentorPhone = view.findViewById(R.id.mentorPhoneET);
+        cancel = view.findViewById(R.id.cancelMentorBTN);
+        save = view.findViewById(R.id.saveMentorBTN);
 
-        addTerm = view.findViewById(R.id.editTermTV);
-        termName = view.findViewById(R.id.termNameET);
-        termStart = view.findViewById(R.id.termStartET);
-        termEnd = view.findViewById(R.id.termEndET);
-        save = view.findViewById(R.id.saveBtn);
-        cancel = view.findViewById(R.id.cancelBtn);
-
-
-        //save button
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-
-                String name = termName.getText().toString();
-                Date startDate;
-                Date endDate;
-                try {
-                    startDate = formatter.parse(termStart.getText().toString());
-                    endDate = formatter.parse(termEnd.getText().toString());
-                    term = new Term(name, startDate, endDate);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-
-                //inserting new term into termviewmodel
-                TermFragment.getTermViewModel().insert(term);
-                //clears current text in view
-                clear();
-                //changes screen back to termFragment view
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.sTermFragment);
-                fragmentTransaction.commit();
-
-            }
-        });
-
-        //cancel button
+        //cancel adding mentor
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //clears the current text in boxes
-                clear();
-                //changes screen back to termFragment view
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.sTermFragment);
-                fragmentTransaction.commit();
-
+                clearText();
+                Toast.makeText(getContext(), "Cancel Button", Toast.LENGTH_SHORT).show();
 
             }
         });
 
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "Save Button", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -163,11 +111,11 @@ public class AddTermFragment extends Fragment {
         }
     }
 
-    public void clear ( ){
-        termStart.setText("");
-        termEnd.setText("");
-        termName.setText("");
-
+    //clears text in editext
+    public void clearText() {
+        mentorPhone.setText("");
+        mentorEmail.setText("");
+        mentorName.setText("");
     }
 
     @Override
@@ -185,6 +133,7 @@ public class AddTermFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
     }
 
     /**

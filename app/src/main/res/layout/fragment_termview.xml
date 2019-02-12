@@ -2,25 +2,25 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/courseFrameLayout"
+    android:id="@+id/termFrameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/courseRecyclerView"
+        android:id="@+id/termRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/courseitemlistview_fragment">
+        tools:listitem="@layout/item_termview">
 
     </android.support.v7.widget.RecyclerView>
 
     <android.support.constraint.ConstraintLayout
-        android:id="@+id/courseConstraint"
+        android:id="@+id/termConstraint"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/courseFab"
+            android:id="@+id/termFab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

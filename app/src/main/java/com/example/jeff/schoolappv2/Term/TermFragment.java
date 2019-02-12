@@ -1,10 +1,10 @@
 package com.example.jeff.schoolappv2.Term;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -21,14 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Course.CourseFragment;
 import com.example.jeff.schoolappv2.R;
 
 import java.util.Date;
 import java.util.List;
 
-import Adapter.CourseAdapter;
 import Adapter.TermAdapter;
-import Dao.TermDao;
 import Database.AppDatabase;
 import Model.Course;
 import Model.Term;
@@ -49,7 +48,8 @@ public class TermFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private static final AddTermFragment addTermFragment = new AddTermFragment();
+    private static final AddTermFragment sAddTermFragment = new AddTermFragment();
+    private static final TermAdapter sTermAdapter = new TermAdapter();
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -58,15 +58,26 @@ public class TermFragment extends Fragment {
     private FloatingActionButton fab;
     private RecyclerView.Adapter adapter;
     private RecyclerView.Adapter CourseAdap;
-    private List<Term> termItems;
-    private TermViewModel termViewModel;
+    private LiveData<List<Term>> termItems;
+    private static TermViewModel termViewModel;
     private AppDatabase appDatabase;
     private CourseViewModel courseViewModel;
 
 
-
     public TermFragment() {
         // Required empty public constructor
+    }
+
+    public static TermViewModel getTermViewModel() {
+        return termViewModel;
+    }
+
+    public static AddTermFragment getAddTermFragment() {
+        return sAddTermFragment;
+    }
+
+    public static TermAdapter getTermAdapter() {
+        return sTermAdapter;
     }
 
     /**
@@ -99,6 +110,8 @@ public class TermFragment extends Fragment {
         }
 
 
+
+
     }
 
     // loads main menu item selection into view
@@ -114,7 +127,7 @@ public class TermFragment extends Fragment {
 
 
         // inflate fragment view
-        View view = inflater.inflate(R.layout.termitem_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_termview, container, false);
         fab = view.findViewById(R.id.termFab);
         //floating action button on click
         fab.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +138,7 @@ public class TermFragment extends Fragment {
                 // replaces termFragment view with AddTermFragment
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFrameLayout, addTermFragment);
+                fragmentTransaction.replace(R.id.mainFrameLayout, sAddTermFragment);
                 fragmentTransaction.commit();
             }
         });
@@ -134,8 +147,8 @@ public class TermFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        final TermAdapter adapter = new TermAdapter();
-        recyclerView.setAdapter(adapter);
+
+        recyclerView.setAdapter(sTermAdapter);
 
         //gets termviewmodel class
         termViewModel = ViewModelProviders.of(this).get(TermViewModel.class);
@@ -143,10 +156,9 @@ public class TermFragment extends Fragment {
             @Override
             public void onChanged(@Nullable List<Term> terms) {
                 //update the recyclerview and sets the term in the list
-                adapter.setTerms(terms);
+                sTermAdapter.setTerms(terms);
             }
         });
-
 
 
         return view;
@@ -161,33 +173,18 @@ public class TermFragment extends Fragment {
             case R.id.deleteDataItem:
                 Toast.makeText(getContext(), "Delete Data", Toast.LENGTH_SHORT).show();
                 termViewModel.deleteAll();
+
+
                 return true;
             case R.id.insertDataItem:
-                Term term = new Term("Test 2018", new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
-                Term term1 = new Term("Test 2019", new Date(5 / 1 / 2019), new Date(7 / 11 / 2019));
-                Term term2 = new Term("Test 2019", new Date(8 / 2 / 2019), new Date(10 / 12 / 2019));
-                Term term3 = new Term("Test 2019", new Date(11 / 5 / 2019), new Date(1 / 6 / 2020));
-
-
+                Term term = new Term("Term 1", new Date("1/2/12"), new Date("1/2/12"));
+                Term term1 = new Term("Term 2", new Date("1/2/12"), new Date("1/2/12"));
                 termViewModel.insert(term);
-                termViewModel.insert(term1);
-                termViewModel.insert(term2);
-                termViewModel.insert(term3);
-
-                Course course = new Course(term.getTermId(), "Math101", "Inprogress", "this is a note",
-                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
-                Course course1 = new Course(term1.getTermId(), "Math101", "Inprogress", "this is a note",
-                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
-                Course course2 = new Course(term2.getTermId(), "Math101", "Inprogress", "this is a note",
-                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
-                Course course3 = new Course(term3.getTermId(), "Math101", "Inprogress", "this is a note",
-                        new Date(2 / 4 / 2019), new Date(4 / 2 / 2019));
-                courseViewModel.insert(course);
-                courseViewModel.insert(course1);
-                courseViewModel.insert(course2);
-                courseViewModel.insert(course3);
-                Toast.makeText(getContext(), "Insert Data", Toast.LENGTH_SHORT).show();
-
+               termViewModel.insert(term1);
+                Course course = new Course(term.getTermId(), "Term 1 Math", "in progress", "math 101a", new Date(1 / 5 / 12), new Date(2 / 5 / 12));
+                Course course1 = new Course(term1.getTermId(), "Term 2 Math", "in progress", "math 101a", new Date(1 / 5 / 12), new Date(2 / 5 / 12));
+                CourseFragment.getCourseViewModel().insert(course);
+                CourseFragment.getCourseViewModel().insert(course1);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -232,7 +229,6 @@ public class TermFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
 
 
 

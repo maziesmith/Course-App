@@ -46,5 +46,9 @@ public class CourseViewModel extends AndroidViewModel {
 
     }
 
+    public void deleteAll(){
+        appRepository.deleteAllCourses();
+    }
+
 
 }

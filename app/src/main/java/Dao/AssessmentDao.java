@@ -30,7 +30,7 @@ public interface AssessmentDao {
     @Query("SELECT * FROM assessment_table")
     LiveData<List<Assessment>> getAllAssessments();
 
-    @Query("SELECT * FROM assessment_table WHERE courseId IS :courseId")
+    @Query("SELECT * FROM assessment_table WHERE courseId =:courseId")
     LiveData<List<Assessment>> getAllAssessmentsForCourse(int courseId);
 
 }

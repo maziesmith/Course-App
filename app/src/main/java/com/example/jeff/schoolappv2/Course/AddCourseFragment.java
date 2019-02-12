@@ -4,17 +4,28 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Assessment.AddAssessmentFragment;
+import com.example.jeff.schoolappv2.Mentor.AddMentorFragment;
 import com.example.jeff.schoolappv2.R;
 
-import static com.example.jeff.schoolappv2.Course.AddCourseFragment.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import Adapter.TermAdapter;
+import Model.Assessment;
+import Model.Course;
+import Model.Mentor;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -24,7 +35,7 @@ import static com.example.jeff.schoolappv2.Course.AddCourseFragment.*;
  * Use the {@link AddCourseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddCourseFragment extends Fragment  {
+public class AddCourseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -33,12 +44,20 @@ public class AddCourseFragment extends Fragment  {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private EditText title;
-    private EditText start;
-    private EditText end;
-    private EditText status;
-    private EditText notes;
-    private ImageButton share;
+
+    private Course course;
+    private Mentor mentor;
+    private Assessment assessment;
+    private static final AddMentorFragment sAddMentorFragment = new AddMentorFragment();
+    private static final AddAssessmentFragment sAddAssessmentFragment = new AddAssessmentFragment();
+
+
+    //layout button,editext
+    private EditText courseTitle;
+    private EditText courseStart;
+    private EditText courseEnd;
+    private EditText courseStatus;
+    private EditText courseNotes;
     private Button save;
     private Button cancel;
 
@@ -80,30 +99,30 @@ public class AddCourseFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.courseaddcourse_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_courseaddcourse, container, false);
 
-        title = view.findViewById(R.id.courseNameET);
-        start = view.findViewById(R.id.startDateET);
-        end = view.findViewById(R.id.endDateET);
-        status = view.findViewById(R.id.statusET);
-        share = view.findViewById(R.id.shareIV);
-        notes = view.findViewById(R.id.noteET);
-        save = view.findViewById(R.id.saveBTN);
-        cancel = view.findViewById(R.id.cancelBTN);
+        courseTitle = view.findViewById(R.id.courseNameET);
+        courseStart = view.findViewById(R.id.startDateET);
+        courseEnd = view.findViewById(R.id.endDateET);
+        courseStatus = view.findViewById(R.id.statusET);
+        courseNotes = view.findViewById(R.id.notesET);
+        save = view.findViewById(R.id.addCourseSaveBTN);
+        cancel = view.findViewById(R.id.addCourseCancelBTN);
 
-        //share button
-        share.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Share Button clicked", Toast.LENGTH_SHORT).show();
 
-            }
-        });
         //save button
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "Save Button clicked", Toast.LENGTH_SHORT).show();
+                //saves data
+                saveData();
+
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+                fragmentTransaction.replace(R.id.courseMainFrameLayout, CourseMainActivity.sCourseFragment);
+                fragmentTransaction.commit();
+
             }
         });
 
@@ -111,6 +130,7 @@ public class AddCourseFragment extends Fragment  {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                clearData();
                 Toast.makeText(getContext(), "Cancel Button clicked", Toast.LENGTH_SHORT).show();
 
             }
@@ -121,6 +141,43 @@ public class AddCourseFragment extends Fragment  {
 
 
     }
+
+
+    //clear data
+    public void clearData() {
+        courseTitle.setText("");
+        courseStart.setText("");
+        courseEnd.setText("");
+        courseNotes.setText("");
+        courseStatus.setText("");
+
+    }
+
+
+    //save data
+    public void saveData() {
+        //course info
+        String courseTitleString = courseTitle.getText().toString();
+        String courseStatusString = courseStatus.getText().toString();
+        String courseNotesString = courseNotes.getText().toString();
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        Date startDate;
+        Date endDate;
+        try {
+            startDate = formatter.parse(courseStart.getText().toString());
+            endDate = formatter.parse(courseEnd.getText().toString());
+            course = new Course(TermAdapter.sCurrentTermId, courseTitleString, courseStatusString, courseNotesString, startDate, endDate);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        CourseFragment.getCourseViewModel().insert(course);
+        clearData();
+
+
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

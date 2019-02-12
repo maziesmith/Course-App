@@ -13,21 +13,15 @@ import java.util.Date;
 
 import Converter.Converters;
 import Dao.AssessmentDao;
-import Dao.CourseAssessmentDao;
 import Dao.CourseDao;
-import Dao.CourseMentorDao;
 import Dao.MentorDao;
-import Dao.TermCourseDao;
 import Dao.TermDao;
 import Model.Assessment;
 import Model.Course;
-import Model.CourseAssessment;
-import Model.CourseMentor;
 import Model.Mentor;
 import Model.Term;
-import Model.TermCourse;
 
-@Database(entities = {Assessment.class, Course.class, Mentor.class, Term.class, TermCourse.class, CourseAssessment.class, CourseMentor.class}, version = 1, exportSchema = false)
+@Database(entities = {Assessment.class, Course.class, Mentor.class, Term.class}, version = 2, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
@@ -39,11 +33,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public abstract MentorDao getMentorDao();
 
-    public abstract TermCourseDao getTermCourseDao();
 
-    public abstract CourseAssessmentDao getCourseAssessmentDao();
-
-    public abstract CourseMentorDao getCourseMentorDao();
 
 
     private static volatile AppDatabase INSTANCE;

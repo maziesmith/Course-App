@@ -7,11 +7,8 @@ import android.os.AsyncTask;
 import java.util.List;
 
 import Dao.AssessmentDao;
-import Dao.CourseAssessmentDao;
 import Dao.CourseDao;
-import Dao.CourseMentorDao;
 import Dao.MentorDao;
-import Dao.TermCourseDao;
 import Dao.TermDao;
 import Database.AppDatabase;
 import Model.Assessment;
@@ -25,14 +22,10 @@ public class AppRepository {
     private AssessmentDao assessmentDao;
     private CourseDao courseDao;
     private MentorDao mentorDao;
-    private TermCourseDao termCourseDao;
-    private CourseMentorDao courseMentorDao;
-    private CourseAssessmentDao courseAssessmentDao;
 
 
     private LiveData<List<Term>> allTerms;
     private LiveData<List<Course>> allCourses;
-
     private LiveData<List<Assessment>> allAssessments;
     private LiveData<List<Mentor>> allMentors;
 
@@ -44,9 +37,6 @@ public class AppRepository {
         assessmentDao = db.getAssessmentDao();
         courseDao = db.getCourseDao();
         mentorDao = db.getMentorDao();
-        termCourseDao = db.getTermCourseDao();
-        courseMentorDao = db.getCourseMentorDao();
-        courseAssessmentDao = db.getCourseAssessmentDao();
 
 
         allTerms = termDao.getAllTerms();
@@ -56,17 +46,6 @@ public class AppRepository {
 
     }
 
-    public LiveData<List<Course>> getAllCoursesByTerm(int termId) {
-        return courseDao.getAllCoursesForTerms(termId);
-    }
-
-    public LiveData<List<Mentor>> getAllMentorsByCourse(int courseId) {
-        return mentorDao.getAllMentorsForCourse(courseId);
-    }
-
-    public LiveData<List<Assessment>> getAllAssessmentsByCourse(int courseId) {
-        return assessmentDao.getAllAssessmentsForCourse(courseId);
-    }
 
     public LiveData<List<Term>> getAllTerms() {
         return allTerms;
@@ -84,6 +63,18 @@ public class AppRepository {
         return allMentors;
     }
 
+    public LiveData<List<Course>> getAllCoursesByTerm(int termId) {
+        return courseDao.getAllCoursesForTerms(termId);
+    }
+
+    public LiveData<List<Mentor>> getAllMentorsByCourse(int courseId) {
+        return mentorDao.getAllMentorsForCourse(courseId);
+    }
+
+    public LiveData<List<Assessment>> getAllAssessmentsByCourse(int courseId) {
+        return assessmentDao.getAllAssessmentsForCourse(courseId);
+    }
+
     public void insertTerm(Term term) {
         new insertAsyncTaskTerm(termDao).execute(term);
     }
@@ -96,6 +87,11 @@ public class AppRepository {
         new deleteAllAsyncTaskTerm(termDao).execute();
 
 
+    }
+
+
+    public void deleteAllCourses() {
+        new deleteAllAsyncTaskCourse(courseDao).execute();
     }
 
     public void updateTerm(Term term) {
@@ -158,7 +154,7 @@ public class AppRepository {
         }
 
         @Override
-        protected Void doInBackground(Term... terms) {
+        protected Void doInBackground(final Term... terms) {
             asyncTaskTermDao.insertTerm(terms[0]);
             return null;
         }
@@ -272,24 +268,41 @@ public class AppRepository {
         }
     }
 
-    //get course by termId
-    private static class getAsyncTaskCourseTerm extends AsyncTask<Course, Void, Void> {
+//    //retreieve coursebytermId
+//
+//    private static class getCourseByTermId extends AsyncTask<Course, Void,  LiveData<List<Course>>>{
+//
+//        private CourseDao courseDao;
+//
+//        public getCourseByTermId(CourseDao courseDao) {
+//            this.courseDao = courseDao;
+//        }
+//
+//        @Override
+//        protected LiveData<List<Course>> doInBackground(Course... courses) {
+//            return courseDao.getAllCoursesForTerms(courses[0].getTermId());
+//
+//
+//        }
+//   }
 
-        private CourseDao asyncTaskCourseDao;
 
-        public getAsyncTaskCourseTerm(CourseDao asyncTaskCourseDao) {
-            this.asyncTaskCourseDao = asyncTaskCourseDao;
+    //delete all terms
+    private static class deleteAllAsyncTaskCourse extends AsyncTask<Void, Void, Void> {
 
+        private CourseDao asyncCourseDao;
+
+        public deleteAllAsyncTaskCourse(CourseDao asyncCourseDao) {
+            this.asyncCourseDao = asyncCourseDao;
         }
-
 
         @Override
-        protected Void doInBackground(Course... courses) {
-            asyncTaskCourseDao.getAllCoursesForTerms(courses[0].getTermId());
+        protected Void doInBackground(Void... voids) {
+            asyncCourseDao.deleteAllCourses();
             return null;
         }
-
     }
+
 
     //insert Assessment
     private static class insertAsyncTaskAssessment extends AsyncTask<Assessment, Void, Void> {

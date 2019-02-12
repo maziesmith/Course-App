@@ -24,6 +24,11 @@ public class MentorViewModel extends AndroidViewModel {
         appRepository.insertMentor(mentor);
     }
 
+    public LiveData<List<Mentor>> getAllMentorsByCourse(int courseId) {
+        return appRepository.getAllMentorsByCourse(courseId);
+
+    }
+
     public void delete(Mentor mentor) {
         appRepository.deleteMentor(mentor);
 

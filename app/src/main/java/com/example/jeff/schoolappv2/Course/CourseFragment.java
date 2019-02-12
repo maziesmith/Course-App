@@ -13,19 +13,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
 import java.util.List;
 
 import Adapter.CourseAdapter;
+import Adapter.TermAdapter;
 import Database.AppDatabase;
 import Model.Course;
 import ViewModel.CourseViewModel;
+
+import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -43,7 +46,8 @@ public class CourseFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private static final AddCourseFragment sAddCourseFragment = new AddCourseFragment();
+    public static final AddCourseFragment sAddCourseFragment = new AddCourseFragment();
+    public static final CourseAdapter sCourseAdapter = new CourseAdapter();
 
     private String mParam1;
     private String mParam2;
@@ -51,14 +55,26 @@ public class CourseFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
-    private CourseAdapter courseAdapter;
-    private CourseViewModel courseViewModel;
-    private CourseMainActivity courseMainActivity = new CourseMainActivity();
+
+    private static CourseViewModel sCourseViewModel;
+
     private AppDatabase appDatabase;
 
 
     public CourseFragment() {
         // Required empty public constructor
+    }
+
+    public static AddCourseFragment getAddCourseFragment() {
+        return sAddCourseFragment;
+    }
+
+    public static CourseAdapter getCourseAdapter() {
+        return sCourseAdapter;
+    }
+
+    public static CourseViewModel getCourseViewModel() {
+        return sCourseViewModel;
     }
 
     /**
@@ -86,7 +102,7 @@ public class CourseFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Toast.makeText(getContext(), "TEST " + courseMainActivity.getTermId(), Toast.LENGTH_SHORT).show();
+        Log.d(TAG, "onCreate: " + TermAdapter.sCurrentTermId );
 
     }
 
@@ -95,7 +111,7 @@ public class CourseFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.courseitem_fragment, container, false);
+        View view = inflater.inflate(R.layout.fragment_course, container, false);
 
 
         fab = view.findViewById(R.id.courseFab);
@@ -111,23 +127,26 @@ public class CourseFragment extends Fragment {
         });
 
         //initializes recycler view and sets CourseAdapater to information
-        courseList = courseViewModel.getAllCoursesByTerm(courseMainActivity.getTermId());
+
         recyclerView = view.findViewById(R.id.courseRecyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
 
-        final CourseAdapter adapter = new CourseAdapter();
-        recyclerView.setAdapter(adapter);
+        recyclerView.setAdapter(sCourseAdapter);
 
-
-        courseViewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
-        courseViewModel.getAllCoursesByTerm(courseMainActivity.getTermId()).observe(this, new Observer<List<Course>>() {
+        sCourseViewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
+        sCourseViewModel.getAllCoursesByTerm(TermAdapter.sCurrentTermId).observe(this, new Observer<List<Course>>() {
             @Override
             public void onChanged(@Nullable List<Course> courses) {
-                courseAdapter.setCourses(courses);
+                sCourseAdapter.setCourses(courses);
             }
         });
+
+
+//        Course course = new Course(86, "Term 86", "good", "ok", new Date(1/23/12), new Date(1/23/34));
+//        courseViewModel.insert(course);
+
 
 
         return view;
