@@ -45,4 +45,6 @@ public class TermViewModel extends AndroidViewModel {
     public LiveData<List<Term>> getAllTerms() {
         return allTerms;
     }
+
+
 }

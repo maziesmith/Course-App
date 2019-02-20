@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/mentorNameTV"
+                android:id="@+id/mvMentorNameTV"
                 android:layout_width="316dp"
                 android:layout_height="wrap_content"
                 android:text="Mentor Name"
@@ -29,7 +29,7 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/mentorEmailTV"
+                android:id="@+id/mvMentorEmailTV"
                 android:layout_width="316dp"
                 android:layout_height="wrap_content"
                 android:text="Mentor Email"
@@ -42,7 +42,7 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/mentorPhoneTV"
+                    android:id="@+id/mvMentorPhoneTV"
                     android:layout_width="266dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -51,14 +51,14 @@
                     android:textSize="18sp" />
 
                 <ImageButton
-                    android:id="@+id/editMentorIB"
+                    android:id="@+id/mvEditMentorIB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     app:srcCompat="@drawable/ic_edit_black_24dp" />
 
                 <ImageButton
-                    android:id="@+id/deleteMentorIB"
+                    android:id="@+id/mvDeleteMentorIB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"

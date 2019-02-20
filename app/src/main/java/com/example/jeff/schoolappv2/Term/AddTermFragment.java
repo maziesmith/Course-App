@@ -1,12 +1,18 @@
 package com.example.jeff.schoolappv2.Term;
 
+import android.app.Activity;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.jeff.schoolappv2.Notification.NotificationUtils;
 import com.example.jeff.schoolappv2.R;
 
 import java.text.DateFormat;
@@ -23,6 +30,7 @@ import java.util.Date;
 import java.util.List;
 
 import Adapter.TermAdapter;
+import DatePicker.DatePickerFragment;
 import Model.Term;
 import ViewModel.TermViewModel;
 
@@ -56,6 +64,15 @@ public class AddTermFragment extends Fragment {
     private TermViewModel termViewModel;
     private Term term;
 
+    //used for datepicker
+    private static final int START_CODE = 1;
+    private static final int END_CODE = 2;
+    private String selectedStart;
+    private String selectedEnd;
+
+
+    private NotificationUtils notificationUtils;
+
 
     private OnFragmentInteractionListener mListener;
 
@@ -81,6 +98,7 @@ public class AddTermFragment extends Fragment {
         return fragment;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +107,8 @@ public class AddTermFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        notificationUtils = new NotificationUtils(getActivity());
     }
 
     @Override
@@ -105,33 +125,70 @@ public class AddTermFragment extends Fragment {
         cancel = view.findViewById(R.id.cancelBtn);
 
 
+
+        final FragmentManager fmDate = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
+
+        //startdate datepicker
+        termStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                AppCompatDialogFragment newFragment = new DatePickerFragment();
+                newFragment.setTargetFragment(AddTermFragment.this, START_CODE);
+                newFragment.show(fmDate, "datePicker");
+
+            }
+        });
+
+        //enddate datepicker
+        termEnd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatDialogFragment newFragment = new DatePickerFragment();
+                newFragment.setTargetFragment(AddTermFragment.this, END_CODE);
+                newFragment.show(fmDate, "datePicker");
+
+
+            }
+
+        });
+
         //save button
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
                 DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
                 String name = termName.getText().toString();
-                Date startDate;
-                Date endDate;
+                Date startDate = null;
+                Date endDate = null;
                 try {
                     startDate = formatter.parse(termStart.getText().toString());
                     endDate = formatter.parse(termEnd.getText().toString());
-                    term = new Term(name, startDate, endDate);
+
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
+                term = new Term(name, startDate, endDate);
 
                 //inserting new term into termviewmodel
                 TermFragment.getTermViewModel().insert(term);
+
+
+                //creates new notification that displays once term is added
+
+//                Notification.Builder nb = notificationUtils
+//                        .getAndroidChannelNotification(termName.getText().toString(), "Term Starts: " + startDate + " Term Ends: " + endDate);
+//                notificationUtils.getManager().notify(102, nb.build());
+//
+
                 //clears current text in view
                 clear();
                 //changes screen back to termFragment view
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.sTermFragment);
+                fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.getTermFragment());
                 fragmentTransaction.commit();
 
             }
@@ -146,7 +203,7 @@ public class AddTermFragment extends Fragment {
                 //changes screen back to termFragment view
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.sTermFragment);
+                fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.getTermFragment());
                 fragmentTransaction.commit();
 
 
@@ -156,6 +213,20 @@ public class AddTermFragment extends Fragment {
         return view;
     }
 
+
+    //method to post datepicker data to specifed edittext
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == START_CODE && resultCode == Activity.RESULT_OK) {
+            selectedStart = data.getStringExtra("selectedDate");
+            termStart.setText(selectedStart);
+        } else if (requestCode == END_CODE && resultCode == Activity.RESULT_OK) {
+            selectedEnd = data.getStringExtra("selectedDate");
+            termEnd.setText(selectedEnd);
+        }
+    }
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
@@ -163,7 +234,7 @@ public class AddTermFragment extends Fragment {
         }
     }
 
-    public void clear ( ){
+    public void clear() {
         termStart.setText("");
         termEnd.setText("");
         termName.setText("");
@@ -201,4 +272,6 @@ public class AddTermFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
 }

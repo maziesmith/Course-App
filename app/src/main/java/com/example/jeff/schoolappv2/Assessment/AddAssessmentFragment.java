@@ -1,14 +1,34 @@
 package com.example.jeff.schoolappv2.Assessment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
+import com.example.jeff.schoolappv2.Course.CourseViewActivity;
 import com.example.jeff.schoolappv2.R;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import Adapter.CourseAdapter;
+import DatePicker.DatePickerFragment;
+import Model.Assessment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,8 +47,26 @@ public class AddAssessmentFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private EditText assessmentName;
+    private RadioGroup radioGroup;
+    private RadioButton performance;
+    private RadioButton objective;
+    private EditText assessmentDueDate;
+    private Button cancel;
+    private Button save;
+
+    private String assessmentType;
+    private  static Assessment sAssessment;
+    public static final int REQUEST_CODE = 1;
+    private String dueDate;
+
 
     private OnFragmentInteractionListener mListener;
+
+    public  static Assessment getAssessment() {
+        return sAssessment;
+    }
+
 
     public AddAssessmentFragment() {
         // Required empty public constructor
@@ -65,7 +103,75 @@ public class AddAssessmentFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_assessmentaddassessment, container, false);
+        View view = inflater.inflate(R.layout.fragment_assessmentaddassessment, container, false);
+
+        assessmentName = view.findViewById(R.id.assessmentNameET);
+
+
+        assessmentDueDate = view.findViewById(R.id.assessmentDueDateET);
+        save = view.findViewById(R.id.assessmentSaveBTN);
+        cancel = view.findViewById(R.id.assessmentCancelBTN);
+        radioGroup = view.findViewById(R.id.addRadioGroup);
+        objective = view.findViewById(R.id.objectiveRB);
+        performance = view.findViewById(R.id.performanceRB);
+
+final FragmentManager fmDate = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
+
+
+        assessmentDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatDialogFragment dateFragment = new DatePickerFragment();
+                dateFragment.setTargetFragment(AddAssessmentFragment.this, REQUEST_CODE);
+                dateFragment.show(fmDate, "datePicker");
+
+
+            }
+        });
+
+
+
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                saveData();
+                clearData();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.courseActivityViewFrame, CourseViewActivity.getCourseViewFragment());
+                ft.commit();
+
+
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearData();
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.courseActivityViewFrame, CourseViewActivity.getCourseViewFragment());
+                ft.commit();
+
+
+            }
+        });
+
+
+        return view;
+
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+            dueDate = data.getStringExtra("selectedDate");
+            assessmentDueDate.setText(dueDate);
+
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -90,6 +196,36 @@ public class AddAssessmentFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void clearData() {
+        assessmentName.setText("");
+
+        assessmentDueDate.setText("");
+    }
+
+
+    public void saveData() {
+
+        //converts date from string to date format
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        Date dateDate;
+        if (objective.isChecked()) {
+            assessmentType = "Objective";
+        } else if (performance.isChecked()) {
+            assessmentType = "performance";
+        }
+
+
+        try {
+            dateDate = formatter.parse(dueDate.toString());
+            sAssessment = new Assessment(CourseAdapter.getCurrentCourseId(), assessmentType, assessmentName.getText().toString(), dateDate);
+            AssessmentViewFragment.getAssessmentViewModel().insert(sAssessment);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
     /**

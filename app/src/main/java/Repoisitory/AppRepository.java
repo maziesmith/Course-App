@@ -63,6 +63,7 @@ public class AppRepository {
         return allMentors;
     }
 
+
     public LiveData<List<Course>> getAllCoursesByTerm(int termId) {
         return courseDao.getAllCoursesForTerms(termId);
     }
@@ -83,6 +84,7 @@ public class AppRepository {
         new deleteAsyncTaskTerm(termDao).execute(term);
     }
 
+
     public void deleteAllTerms() {
         new deleteAllAsyncTaskTerm(termDao).execute();
 
@@ -101,7 +103,7 @@ public class AppRepository {
 
 
     public void insertMentor(Mentor mentor) {
-        new updateAsyncTaskMentor(mentorDao).execute(mentor);
+        new insertAsyncTaskMentor(mentorDao).execute(mentor);
 
     }
 
@@ -139,7 +141,7 @@ public class AppRepository {
     }
 
     public void updateAssessment(Assessment assessment) {
-        new updateAsyncTaskAssessment(assessmentDao).equals(assessment);
+        new updateAsyncTaskAssessment(assessmentDao).execute(assessment);
 
     }
 
@@ -160,6 +162,21 @@ public class AppRepository {
         }
 
 
+    }
+
+    private static class insertAsyncTaskAssessment extends AsyncTask<Assessment, Void, Void> {
+
+        private AssessmentDao asyncTaskAssessmentDao;
+
+        public insertAsyncTaskAssessment(AssessmentDao assessmentDao) {
+            this.asyncTaskAssessmentDao = assessmentDao;
+        }
+
+        @Override
+        protected Void doInBackground(Assessment... assessments) {
+            asyncTaskAssessmentDao.insertAssessment(assessments[0]);
+            return null;
+        }
     }
 
 
@@ -304,23 +321,6 @@ public class AppRepository {
     }
 
 
-    //insert Assessment
-    private static class insertAsyncTaskAssessment extends AsyncTask<Assessment, Void, Void> {
-
-        private AssessmentDao asyncTaskAssessmentDao;
-
-        insertAsyncTaskAssessment(AssessmentDao dao) {
-            asyncTaskAssessmentDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Assessment... assessments) {
-            asyncTaskAssessmentDao.insertAssessment(assessments[0]);
-            return null;
-        }
-
-    }
-
     //update Assessment
     private static class updateAsyncTaskAssessment extends AsyncTask<Assessment, Void, Void> {
 
@@ -355,11 +355,11 @@ public class AppRepository {
         }
     }
 
+
     //insert mentor
     private static class insertAsyncTaskMentor extends AsyncTask<Mentor, Void, Void> {
 
         private MentorDao asyncMentorDao;
-
 
         public insertAsyncTaskMentor(MentorDao mentorDao) {
             this.asyncMentorDao = mentorDao;
@@ -372,6 +372,7 @@ public class AppRepository {
             return null;
         }
     }
+
 
     //delete mentor
     private static class deleteAsyncTaskMentor extends AsyncTask<Mentor, Void, Void> {

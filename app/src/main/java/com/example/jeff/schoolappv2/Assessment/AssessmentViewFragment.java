@@ -1,63 +1,68 @@
-package com.example.jeff.schoolappv2.Mentor;
+package com.example.jeff.schoolappv2.Assessment;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
 
-import com.example.jeff.schoolappv2.Course.CourseViewActivity;
-import com.example.jeff.schoolappv2.Course.CourseViewFragment;
 import com.example.jeff.schoolappv2.R;
 
+import java.util.List;
+
+import Adapter.AssessmentAdapter;
 import Adapter.CourseAdapter;
-import Model.Mentor;
-import ViewModel.MentorViewModel;
+import Model.Assessment;
+import ViewModel.AssessmentViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link OnFragmentInteractionListener} interface
+ * {@link AssessmentViewFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddMentorFragment#newInstance} factory method to
+ * Use the {@link AssessmentViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddMentorFragment extends Fragment {
+public class AssessmentViewFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
-
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    private static MentorViewModel sMentorViewModel;
-    private Mentor mentor;
-
-    private EditText mentorName;
-    private EditText mentorPhone;
-    private EditText mentorEmail;
-    private Button cancel;
-    private Button save;
-
-
     private OnFragmentInteractionListener mListener;
 
-    public AddMentorFragment() {
+    private static final AssessmentAdapter sAssessmentAdapter = new AssessmentAdapter();
+    private static AssessmentViewModel sAssessmentViewModel;
+
+    private RecyclerView assessmentRecyclerView;
+    private Button backBtn;
+
+
+    private OnFragmentInteractionListener listener;
+
+
+    public AssessmentViewFragment() {
         // Required empty public constructor
     }
 
-    public static MentorViewModel getMentorViewModel() {
-        return sMentorViewModel;
+    public static AssessmentAdapter getAssessmentAdapter() {
+        return sAssessmentAdapter;
+    }
+
+    public static AssessmentViewModel getAssessmentViewModel() {
+        return sAssessmentViewModel;
     }
 
     /**
@@ -66,11 +71,11 @@ public class AddMentorFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment AddMentorFragment.
+     * @return A new instance of fragment AssessmentViewFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddMentorFragment newInstance(String param1, String param2) {
-        AddMentorFragment fragment = new AddMentorFragment();
+    public static AssessmentViewFragment newInstance(String param1, String param2) {
+        AssessmentViewFragment fragment = new AssessmentViewFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -91,43 +96,36 @@ public class AddMentorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_mentoraddmentor, container, false);
-        mentorName = view.findViewById(R.id.addMentorNameET);
-        mentorEmail = view.findViewById(R.id.addMentorEmailET);
-        mentorPhone = view.findViewById(R.id.addMentorPhoneET);
-        cancel = view.findViewById(R.id.cancelMentorBTN);
-        save = view.findViewById(R.id.saveMentorBTN);
+        View view = inflater.inflate(R.layout.fragment_assessmentview, container, false);
 
-        //cancel adding mentor
-        cancel.setOnClickListener(new View.OnClickListener() {
+        backBtn = view.findViewById(R.id.assessmentViewBackBtn);
+
+        //sets assessment recyclerview
+        assessmentRecyclerView = view.findViewById(R.id.viewAssessmentRV);
+        assessmentRecyclerView.setHasFixedSize(true);
+        assessmentRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        assessmentRecyclerView.setAdapter(sAssessmentAdapter);
+
+
+        sAssessmentViewModel = ViewModelProviders.of(getActivity()).get(AssessmentViewModel.class);
+        sAssessmentViewModel.getAllAssessmentsByCourse(CourseAdapter.getCurrentCourseId()).observe(this, new Observer<List<Assessment>>() {
             @Override
-            public void onClick(View v) {
-                clearText();
-                Toast.makeText(getContext(), "Cancel Button", Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-        save.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //saves data on click, loads previous fragment back, then removes data from textview
-                saveMentor();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.courseActivityViewFrame, CourseViewActivity.getCourseViewFragment());
-                ft.commit();
-                clearText();
-
-
+            public void onChanged(@Nullable List<Assessment> assessments) {
+                sAssessmentAdapter.setAssessment(assessments);
 
 
             }
         });
 
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //back button to go to course
+                getActivity().onBackPressed();
+            }
+        });
 
         return view;
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -135,21 +133,6 @@ public class AddMentorFragment extends Fragment {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
-    }
-
-    //clears text in editext
-    public void clearText() {
-        mentorPhone.setText("");
-        mentorEmail.setText("");
-        mentorName.setText("");
-    }
-
-    public void saveMentor(){
-        mentor = new Mentor(CourseAdapter.getCurrentCourseId(),
-                mentorName.getText().toString(), mentorPhone.getText().toString(),
-                mentorEmail.getText().toString());
-
-        MentorViewFragment.getMentorViewModel().insert(mentor);
     }
 
     @Override
@@ -167,7 +150,6 @@ public class AddMentorFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-
     }
 
     /**

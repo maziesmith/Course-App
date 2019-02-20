@@ -1,39 +1,34 @@
 package com.example.jeff.schoolappv2.Course;
 
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.Assessment.AddAssessmentFragment;
+import com.example.jeff.schoolappv2.Assessment.AssessmentViewFragment;
 import com.example.jeff.schoolappv2.Mentor.AddMentorFragment;
+import com.example.jeff.schoolappv2.Mentor.MentorViewFragment;
 import com.example.jeff.schoolappv2.R;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
 
 import Adapter.AssessmentAdapter;
 import Adapter.CourseAdapter;
 import Adapter.MentorAdapter;
-import Model.Assessment;
-import Model.Mentor;
-import ViewModel.AssessmentViewModel;
-import ViewModel.CourseViewModel;
-import ViewModel.MentorViewModel;
+import Adapter.TermAdapter;
+import Database.AppDatabase;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,7 +38,7 @@ import ViewModel.MentorViewModel;
  * Use the {@link CourseViewFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CourseViewFragment extends Fragment  {
+public class CourseViewFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -56,11 +51,13 @@ public class CourseViewFragment extends Fragment  {
     private static final MentorAdapter sMentorAdapter = new MentorAdapter();
     private static final AssessmentAdapter sAssessmentAdapter = new AssessmentAdapter();
     private static final CourseAdapter sCourseAdapter = new CourseAdapter();
-    private static final AddMentorFragment sAddMentorFragment= new AddMentorFragment();
-    private static final AddAssessmentFragment sAddAssessmentFragment = new AddAssessmentFragment();
-    private static CourseViewModel sCourseViewModel;
-    private static MentorViewModel sMentorViewModel;
-    private static AssessmentViewModel sAssessmentViewModel;
+    private static AssessmentViewFragment sAssessmentViewFragment = new AssessmentViewFragment();
+    private static MentorViewFragment sMentorViewFragment = new MentorViewFragment();
+    private static AddAssessmentFragment sAddAssessmentFragment = new AddAssessmentFragment();
+    private static AddMentorFragment sAddMentorFragment = new AddMentorFragment();
+
+
+    private AppDatabase appDatabase;
 
 
     private TextView courseName;
@@ -71,23 +68,32 @@ public class CourseViewFragment extends Fragment  {
     private ImageButton editCourseButton;
     private ImageButton deleteCourseButton;
     private ImageButton shareNotesButton;
-    private RecyclerView mentorRecyclerView;
-    private Button adddMentorButton;
-    private RecyclerView assessmentRecyclerView;
-    private Button addAssessmentButton;
+    private Button viewMentorBtn;
+    private Button addMentorBtn;
+    private Button addAssessmentBtn;
+    private Button viewAssessmentBtn;
     private Button cancelButton;
     private Button saveButton;
 
-
-    public static MentorViewModel getMentorViewModel() {
-        return sMentorViewModel;
-    }
 
     private OnFragmentInteractionListener mListener;
 
     public CourseViewFragment() {
         // Required empty public constructor
     }
+
+    public static MentorAdapter getMentorAdapter() {
+        return sMentorAdapter;
+    }
+
+    public static AssessmentAdapter getAssessmentAdapter() {
+        return sAssessmentAdapter;
+    }
+
+    public static CourseAdapter getCourseAdapter() {
+        return sCourseAdapter;
+    }
+
 
     /**
      * Use this factory method to create a new instance of
@@ -120,8 +126,7 @@ public class CourseViewFragment extends Fragment  {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =  inflater.inflate(R.layout.fragment_coursedetailedview, container, false);
-
+        View view = inflater.inflate(R.layout.fragment_coursedetailedview, container, false);
 
 
         courseName = view.findViewById(R.id.courseTitleTV);
@@ -133,59 +138,138 @@ public class CourseViewFragment extends Fragment  {
         editCourseButton = view.findViewById(R.id.courseEditCourseIB);
         shareNotesButton = view.findViewById(R.id.courseShareIB);
         deleteCourseButton = view.findViewById(R.id.courseDeleteCourseIB);
-        addAssessmentButton = view.findViewById(R.id.courseViewAddAssessmentBtn);
-        adddMentorButton = view.findViewById(R.id.courseViewAddMentorBtn);
+        viewAssessmentBtn = view.findViewById(R.id.courseViewAssessmentBtn);
+        viewMentorBtn = view.findViewById(R.id.courseViewMentorsBtn);
+        addAssessmentBtn = view.findViewById(R.id.addAssessmentBtn);
+        addMentorBtn = view.findViewById(R.id.addMentorBtn);
         cancelButton = view.findViewById(R.id.courseViewCancelBtn);
         saveButton = view.findViewById(R.id.courseViewSaveBtn);
 
-        //sets mentor recyclerview
-        mentorRecyclerView = view.findViewById(R.id.courseViewMentorRV);
-        mentorRecyclerView.setHasFixedSize(true);
-        mentorRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mentorRecyclerView.setAdapter(sMentorAdapter);
-
-        //sets assessment recyclerview
-        assessmentRecyclerView = view.findViewById(R.id.courseAssessmentInfoRV);
-        assessmentRecyclerView.setHasFixedSize(true);
-        assessmentRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        assessmentRecyclerView.setAdapter(sAssessmentAdapter);
-
-        sMentorViewModel = ViewModelProviders.of(this).get(MentorViewModel.class);
-        sMentorViewModel.getAllMentorsByCourse(CourseAdapter.sCurrentCourseId).observe(this, new Observer<List<Mentor>>() {
-
-            @Override
-            public void onChanged(@Nullable List<Mentor> mentors) {
-                sMentorAdapter.setMentors(mentors);
-            }
-
-        });
-
-
-
-        sAssessmentViewModel = ViewModelProviders.of(this).get(AssessmentViewModel.class);
-        sAssessmentViewModel.getAllAssessmentsByCourse(CourseAdapter.sCurrentCourseId).observe(this, new Observer<List<Assessment>>() {
-            @Override
-            public void onChanged(@Nullable List<Assessment> assessments) {
-                sAssessmentAdapter.setAssessments(assessments);
-            }
-        });
 
         //inserts currently clicked data into textview
-        courseName.setText(CourseAdapter.sCurrentCourse.getTitle());
+        courseName.setText(CourseAdapter.getCurrentCourse().getTitle());
         //formats the date to be displayed as string
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        String startDateString = formatter.format(CourseAdapter.sCurrentCourse.getStartDate());
-        String endDateString = formatter.format(CourseAdapter.sCurrentCourse.getEndDate());
+        String startDateString = formatter.format(CourseAdapter.getCurrentCourse().getStartDate());
+        String endDateString = formatter.format(CourseAdapter.getCurrentCourse().getEndDate());
         courseStart.setText(startDateString);
         courseEnd.setText(endDateString);
-        courseStatus.setText(CourseAdapter.sCurrentCourse.getStatus());
-        courseNotes.setText(CourseAdapter.sCurrentCourse.getNote());
+        courseStatus.setText(CourseAdapter.getCurrentCourse().getStatus());
+        courseNotes.setText(CourseAdapter.getCurrentCourse().getNote());
+
+        //edit course button loads new activity with currently clicked course data
+        editCourseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(v.getContext(), EditCourseActivity.class);
+                intent.putExtra("courseName", courseName.getText().toString());
+                intent.putExtra("courseStart", courseStart.getText().toString());
+                intent.putExtra("courseEnd", courseEnd.getText().toString());
+                intent.putExtra("courseNotes", courseNotes.getText().toString());
+                intent.putExtra("courseStatus", courseStatus.getText().toString());
+                v.getContext().startActivity(intent);
+
+            }
+        });
 
 
-return view;
+        //share button to share notes
+        shareNotesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent shareIntent = new Intent();
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.putExtra(Intent.EXTRA_TEXT, courseNotes.getText().toString());
+                shareIntent.setType("text/plain");
+                startActivity(shareIntent);
+            }
+        });
+        //add mentor button
+        addMentorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.courseActivityViewFrame, sAddMentorFragment);
+                ft.commit();
+
+            }
+        });
+
+        //view mentor button
+        viewMentorBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.addToBackStack(null);
+                ft.replace(R.id.courseActivityViewFrame, sMentorViewFragment);
+                ft.commit();
 
 
-}
+            }
+        });
+
+        //deletes course and all associated mentors and assessments
+        deleteCourseButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Toast.makeText(v.getContext(), "Term " + TermAdapter.getCurrentTermId(), Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+
+        //add assessment Button
+        addAssessmentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.courseActivityViewFrame, sAddAssessmentFragment);
+                ft.commit();
+
+            }
+        });
+        // view assessment button
+
+        viewAssessmentBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.courseActivityViewFrame, sAssessmentViewFragment);
+                ft.commit();
+
+            }
+        });
+
+
+//        if (sMentorAdapter.getItemCount() >= 1){
+//            addMentorBtn.setVisibility(View.INVISIBLE);
+//            viewMentorBtn.setVisibility(View.VISIBLE);
+//        }else{
+//            addMentorBtn.setVisibility(View.VISIBLE);
+//            viewMentorBtn.setVisibility(View.INVISIBLE);
+//
+//        }
+//
+//        if (sAssessmentAdapter.getItemCount() >= 1){
+//            addAssessmentBtn.setVisibility(View.INVISIBLE);
+//            viewAssessmentBtn.setVisibility(View.VISIBLE);
+//        }else{
+//            addAssessmentBtn.setVisibility(View.VISIBLE);
+//            viewAssessmentBtn.setVisibility(View.INVISIBLE);
+//
+//        }
+
+
+        return view;
+
+
+    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -210,7 +294,6 @@ return view;
         super.onDetach();
         mListener = null;
     }
-
 
 
     /**

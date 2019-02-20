@@ -12,13 +12,15 @@ import java.util.List;
 import Model.Assessment;
 import Model.Course;
 
+import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
+
 @Dao
 public interface AssessmentDao {
 
     @Insert
     void insertAssessment (Assessment assessment);
 
-    @Update
+    @Update(onConflict = REPLACE)
     void updateAssessment (Assessment assessment);
 
     @Delete

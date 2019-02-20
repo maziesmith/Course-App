@@ -14,5 +14,14 @@
     <string name="email">Email</string>
     <string name="course_name">Course Name</string>
     <string name="start_date">Start Date</string>
+    <string name="add_mentor">Add Mentor</string>
+    <string name="back">Back</string>
+    <string name="assessment_name">Assessment Name</string>
+    <string name="assessment_type">Assessment Type</string>
+    <string name="due_date">Due Date</string>
+    <string name="todo">TODO</string>
+    <string name="channel_name">channel name</string>
+    <string name="channel_description">channel description</string>
+
 
 </resources>

@@ -2,16 +2,20 @@ package Adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.Course.CourseViewActivity;
+import com.example.jeff.schoolappv2.Course.CourseViewFragment;
+import com.example.jeff.schoolappv2.Course.EditCourseActivity;
 import com.example.jeff.schoolappv2.R;
 
 import java.text.DateFormat;
@@ -26,15 +30,27 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
 
     private Context context;
     private List<Course> courseList = new ArrayList<>();
-    public static Course sCurrentCourse;
-    public static int sCurrentCourseId;
-    CourseViewModel courseViewModel;
-
+    private static Course sCurrentCourse;
+    private static int sCurrentCourseId;
+    private CourseViewModel courseViewModel;
 
     public CourseAdapter() {
 
 
     }
+
+    public static Course getCurrentCourse() {
+        return sCurrentCourse;
+    }
+
+    public static int getCurrentCourseId() {
+        return sCurrentCourseId;
+    }
+
+    public CourseViewModel getCourseViewModel() {
+        return courseViewModel;
+    }
+
 
     public Context getContext() {
         return context;
@@ -94,14 +110,18 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
         TextView courseStart;
         TextView courseEnd;
         FloatingActionButton floatingActionButton;
-        LinearLayout linearLayout;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            courseTitle = itemView.findViewById(R.id.courseTitleTV);
-            courseStart = itemView.findViewById(R.id.courseStartTV);
-            courseEnd = itemView.findViewById(R.id.courseEndTV);
+            courseTitle = itemView.findViewById(R.id.cvCourseTitleTV);
+            courseStart = itemView.findViewById(R.id.cvCourseStartTV);
+            courseEnd = itemView.findViewById(R.id.cvCourseEndTV);
+
+
+
+
 
 
             //allows each item to be individually clicked
@@ -119,7 +139,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     v.getContext().startActivity(intent);
 
 
-
                 }
             });
 
@@ -128,17 +147,22 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                 @Override
                 public boolean onLongClick(View v) {
                     int i = getAdapterPosition();
-                    sCurrentCourse = courseList.get(i);
+
                     sCurrentCourseId = sCurrentCourse.getCourseId();
+
+                    //deletes course
+                    //CourseFragment.getCourseViewModel().delete(sCurrentCourse);
+                    //delete mentor by courseId
+
+                    //delete assessment by courseId
+                    Toast.makeText(v.getContext()," Course Id " + getCurrentCourseId(), Toast.LENGTH_SHORT).show();
+
+
                     return true;
                 }
             });
 
         }
-
-
-
-
 
 
     }

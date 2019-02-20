@@ -1,6 +1,5 @@
 package com.example.jeff.schoolappv2.Course;
 
-import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
@@ -13,10 +12,10 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
@@ -27,8 +26,6 @@ import Adapter.TermAdapter;
 import Database.AppDatabase;
 import Model.Course;
 import ViewModel.CourseViewModel;
-
-import static android.support.constraint.Constraints.TAG;
 
 
 /**
@@ -46,12 +43,11 @@ public class CourseFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    public static final AddCourseFragment sAddCourseFragment = new AddCourseFragment();
-    public static final CourseAdapter sCourseAdapter = new CourseAdapter();
+    private static final AddCourseFragment sAddCourseFragment = new AddCourseFragment();
+    private static final CourseAdapter sCourseAdapter = new CourseAdapter();
 
     private String mParam1;
     private String mParam2;
-    private LiveData<List<Course>> courseList;
     private OnFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private FloatingActionButton fab;
@@ -102,7 +98,6 @@ public class CourseFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        Log.d(TAG, "onCreate: " + TermAdapter.sCurrentTermId );
 
     }
 
@@ -132,23 +127,17 @@ public class CourseFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         recyclerView.setAdapter(sCourseAdapter);
 
         sCourseViewModel = ViewModelProviders.of(this).get(CourseViewModel.class);
-        sCourseViewModel.getAllCoursesByTerm(TermAdapter.sCurrentTermId).observe(this, new Observer<List<Course>>() {
+        sCourseViewModel.getAllCoursesByTerm(TermAdapter.getCurrentTermId()).observe(this, new Observer<List<Course>>() {
             @Override
             public void onChanged(@Nullable List<Course> courses) {
                 sCourseAdapter.setCourses(courses);
             }
         });
 
-
-//        Course course = new Course(86, "Term 86", "good", "ok", new Date(1/23/12), new Date(1/23/34));
-//        courseViewModel.insert(course);
-
-
-
+        Toast.makeText(view.getContext(), "Current Term " + TermAdapter.getCurrentTerm().getTermId(), Toast.LENGTH_SHORT).show();
         return view;
 
     }

@@ -1,15 +1,18 @@
 package Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Assessment.EditAssessmentActivity;
+import com.example.jeff.schoolappv2.Mentor.EditMentorActivity;
 import com.example.jeff.schoolappv2.R;
 
 import java.util.ArrayList;
@@ -22,37 +25,57 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.ViewHolder
 
     private Context context;
     private List<Mentor> mentorList = new ArrayList<>();
-    public static Mentor currentMentor;
-    MentorViewModel mentorViewModel;
+    private static Mentor sCurrentMentor;
+    private MentorViewModel mentorViewModel;
+
+    public MentorAdapter() {
+
+    }
+
+
+    public static Mentor getCurrentMentor() {
+        return sCurrentMentor;
+    }
+
+    public MentorViewModel getMentorViewModel() {
+        return mentorViewModel;
+    }
+
+    public List<Mentor> getMentorList() {
+        return mentorList;
+    }
+
+    public Context getContext() {
+        return context;
+    }
 
     @NonNull
     @Override
-    public MentorAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.item_mentorview, viewGroup, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MentorAdapter.ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
         //gets currently clicked mentor
-        currentMentor = mentorList.get(i);
+        sCurrentMentor = mentorList.get(i);
         //sets currently clicked mentor information to textview
-        viewHolder.mentorPhone.setText(currentMentor.getMentorPhone());
-        viewHolder.mentorName.setText(currentMentor.getMentorName());
-        viewHolder.mentorEmail.setText(currentMentor.getMentorEmail());
-
-
+        viewHolder.mentorPhone.setText(sCurrentMentor.getMentorPhone());
+        viewHolder.mentorName.setText(sCurrentMentor.getMentorName());
+        viewHolder.mentorEmail.setText(sCurrentMentor.getMentorEmail());
 
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return mentorList.size();
     }
 
-    public void setMentors (List<Mentor> mentors){
+    //updates the mentor list
+    public void setMentors(List<Mentor> mentors) {
         mentorList = mentors;
         notifyDataSetChanged();
     }
@@ -62,23 +85,30 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.ViewHolder
         private TextView mentorName;
         private TextView mentorPhone;
         private TextView mentorEmail;
-        private Button editMentor;
-        private Button deleteMentor;
+        private ImageButton editMentor;
+        private ImageButton deleteMentor;
+
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            mentorName = itemView.findViewById(R.id.mentorNameTV);
-            mentorPhone = itemView.findViewById(R.id.mentorPhoneTV);
-            mentorEmail = itemView.findViewById(R.id.mentorEmailTV);
-            editMentor = itemView.findViewById(R.id.editMentorIB);
-            deleteMentor = itemView.findViewById(R.id.cancelMentorBTN);
+
+            mentorName = itemView.findViewById(R.id.mvMentorNameTV);
+            mentorPhone = itemView.findViewById(R.id.mvMentorPhoneTV);
+            mentorEmail = itemView.findViewById(R.id.mvMentorEmailTV);
+            editMentor = itemView.findViewById(R.id.mvEditMentorIB);
+            deleteMentor = itemView.findViewById(R.id.mvDeleteMentorIB);
 
 
             editMentor.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Edit Mentor Clicked", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(v.getContext(), EditMentorActivity.class);
+                    intent.putExtra("mentorName", mentorName.getText().toString());
+                    intent.putExtra("mentorPhone", mentorPhone.getText().toString());
+                    intent.putExtra("mentorEmail", mentorEmail.getText().toString());
+                    v.getContext().startActivity(intent);
+
                 }
             });
 
@@ -90,7 +120,13 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.ViewHolder
             });
 
 
+            // on click for when mentor is clicked in list
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
+                }
+            });
 
 
         }

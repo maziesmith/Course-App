@@ -1,15 +1,11 @@
 package com.example.jeff.schoolappv2.Course;
 
-import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
+import android.support.v4.app.NotificationCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +23,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import Adapter.TermAdapter;
-import DatePicker.DatePickerFragment;
 import Model.Assessment;
 import Model.Course;
 import Model.Mentor;
@@ -37,10 +32,10 @@ import Model.Mentor;
  * Activities that contain this fragment must implement the
  * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link AddCourseFragment#newInstance} factory method to
+ * Use the {@link EditCourseFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class AddCourseFragment extends Fragment {
+public class EditCourseFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -57,11 +52,6 @@ public class AddCourseFragment extends Fragment {
     private static final AddMentorFragment sAddMentorFragment = new AddMentorFragment();
     private static final AddAssessmentFragment sAddAssessmentFragment = new AddAssessmentFragment();
 
-    //used for datepicker
-    private static final int START_CODE = 1;
-    private static final int END_CODE = 2;
-    private String selectedStart;
-    private String selectedEnd;
 
     //layout button,editext
     private EditText courseTitle;
@@ -75,7 +65,7 @@ public class AddCourseFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public AddCourseFragment() {
+    public EditCourseFragment() {
         // Required empty public constructor
     }
 
@@ -96,8 +86,8 @@ public class AddCourseFragment extends Fragment {
      * @return A new instance of fragment AddCourseFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static AddCourseFragment newInstance(String param1, String param2) {
-        AddCourseFragment fragment = new AddCourseFragment();
+    public static EditCourseFragment newInstance(String param1, String param2) {
+        EditCourseFragment fragment = new EditCourseFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -131,50 +121,29 @@ public class AddCourseFragment extends Fragment {
         save = view.findViewById(R.id.addCourseSaveBTN);
         cancel = view.findViewById(R.id.addCourseCancelBTN);
 
-        final FragmentManager fmDate = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
 
 
-        //datepicker for courseStart Edittext
-        courseStart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppCompatDialogFragment newFragment = new DatePickerFragment();
-                newFragment.setTargetFragment(AddCourseFragment.this, START_CODE);
-                newFragment.show(fmDate, "datePicker");
-
-            }
-        });
-
-        //datepicker for courseEnd Edittext
-        courseEnd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AppCompatDialogFragment newFragment = new DatePickerFragment();
-                newFragment.setTargetFragment(AddCourseFragment.this, END_CODE);
-                newFragment.show(fmDate, "datePicker");
-
-            }
-        });
         //save button
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
-//                        .setSmallIcon(R.drawable.ic_share_black_24dp)
-//                        .setContentTitle("Test")
-//                        .setContentText("Notification");
-//
-//
-//                NotificationManager notificationManager = (NotificationManager)getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
-//                notificationManager.notify(001, mBuilder.build());
+                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
+                        .setSmallIcon(R.drawable.ic_share_black_24dp)
+                        .setContentTitle("Test")
+                        .setContentText("Notification");
+
+
+                NotificationManager notificationManager = (NotificationManager)getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
+                notificationManager.notify(001, mBuilder.build());
+
 
 
                 //saves data
-                saveData();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.courseMainFrameLayout, CourseMainActivity.getCourseFragment());
-                fragmentTransaction.commit();
+//                saveData();
+//                FragmentManager fm = getFragmentManager();
+//                FragmentTransaction fragmentTransaction = fm.beginTransaction();
+//                fragmentTransaction.replace(R.id.courseMainFrameLayout, CourseMainActivity.getCourseFragment());
+//                fragmentTransaction.commit();
 
             }
         });
@@ -193,18 +162,6 @@ public class AddCourseFragment extends Fragment {
         return view;
 
 
-    }
-
-    //used to set datepicker data to certain editText
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == START_CODE && resultCode == Activity.RESULT_OK) {
-            selectedStart = data.getStringExtra("selectedDate");
-            courseStart.setText(selectedStart);
-        } else if (requestCode == END_CODE && resultCode == Activity.RESULT_OK) {
-            selectedEnd = data.getStringExtra("selectedDate");
-            courseEnd.setText(selectedEnd);
-        }
     }
 
 

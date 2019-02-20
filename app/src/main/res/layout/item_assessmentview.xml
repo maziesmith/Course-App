@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/courseAssessmentRelativeLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -12,8 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusableInTouchMode="true"
-        android:padding="50px"
-        android:paddingBottom="10px">
+        android:padding="50dp"
+        android:paddingBottom="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,18 +20,18 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/assessmentNameTV"
+                android:id="@+id/nameAssessmentTV"
                 android:layout_width="316dp"
                 android:layout_height="wrap_content"
-                android:text="Assessment Name"
+                android:text="@string/assessment_name"
                 android:textAlignment="center"
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/assessmentTypeTV"
+                android:id="@+id/typeAssessmentTV"
                 android:layout_width="316dp"
                 android:layout_height="wrap_content"
-                android:text="Assessment Type"
+                android:text="@string/assessment_type"
                 android:textAlignment="center"
                 android:textSize="18sp" />
 
@@ -42,23 +41,23 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/assessmentDueDateTV"
+                    android:id="@+id/dateAssessmentTV"
                     android:layout_width="266dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="Due Date"
+                    android:text="@string/due_date"
                     android:textAlignment="center"
                     android:textSize="18sp" />
 
                 <ImageButton
-                    android:id="@+id/editAssessmentIB"
+                    android:id="@+id/itemEditAssessmentIB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
                     app:srcCompat="@drawable/ic_edit_black_24dp" />
 
                 <ImageButton
-                    android:id="@+id/deleteAssesmentIB"
+                    android:id="@+id/itemDeleteAssesmentIB"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"

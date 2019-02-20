@@ -35,7 +35,7 @@
                 android:textAlignment="center" />
 
             <EditText
-                android:id="@+id/mentorNameET"
+                android:id="@+id/addMentorNameET"
                 android:layout_width="176dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -60,7 +60,7 @@
                 android:textAlignment="center" />
 
             <EditText
-                android:id="@+id/mentorEmailET"
+                android:id="@+id/addMentorEmailET"
                 android:layout_width="171dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -84,7 +84,7 @@
                 android:textAlignment="center" />
 
             <EditText
-                android:id="@+id/mentorPhoneET"
+                android:id="@+id/addMentorPhoneET"
                 android:layout_width="179dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

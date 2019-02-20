@@ -4,11 +4,14 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.List;
 
 import Model.Assessment;
 import Repoisitory.AppRepository;
+
+import static android.support.constraint.Constraints.TAG;
 
 //viewmodel class used to interact with UI and DB and to survive configuration changes
 public class AssessmentViewModel extends AndroidViewModel {
@@ -17,14 +20,13 @@ public class AssessmentViewModel extends AndroidViewModel {
 
 
     public AssessmentViewModel(@NonNull Application application) {
-
         super(application);
         appRepository = new AppRepository(application);
         allAssessments = appRepository.getAllAssessments();
     }
 
     public LiveData<List<Assessment>> getAllAssessments() {
-        return allAssessments;
+        return appRepository.getAllAssessments();
     }
 
     public LiveData<List<Assessment>> getAllAssessmentsByCourse(int courseId) {

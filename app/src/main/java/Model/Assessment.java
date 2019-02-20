@@ -22,16 +22,16 @@ public class Assessment {
     private String type;
     private String title;
     @TypeConverters(Converters.class)
-    private Date dueDate;
-    private String notes;
+    private Date dateDue;
 
 
-    public Assessment(int courseId, String type, String title, Date dueDate, String notes) {
+
+    public Assessment(int courseId, String type, String title, Date dateDue) {
         this.courseId = courseId;
         this.type = type;
         this.title = title;
-        this.dueDate = dueDate;
-        this.notes = notes;
+        this.dateDue = dateDue;
+
     }
 
     public int getAssessmentId() {
@@ -69,20 +69,12 @@ public class Assessment {
     }
 
     @NonNull
-    public Date getDueDate() {
-        return dueDate;
+    public Date getDateDue() {
+        return dateDue;
     }
 
-    public void setDueDate(@NonNull Date dueDate) {
-        this.dueDate = dueDate;
+    public void setDateDue(@NonNull Date dueDate) {
+        this.dateDue = dueDate;
     }
 
-    @NonNull
-    public String getNotes() {
-        return notes;
-    }
-
-    public void setNotes(@NonNull String notes) {
-        this.notes = notes;
-    }
 }

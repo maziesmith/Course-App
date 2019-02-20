@@ -10,9 +10,8 @@
         android:id="@+id/courseRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:listitem="@layout/item_courseview">
+        tools:listitem="@layout/item_courseview"/>
 
-    </android.support.v7.widget.RecyclerView>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/courseConstraint"

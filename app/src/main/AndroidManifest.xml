@@ -9,7 +9,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Course.CourseViewActivity"></activity>
+        <activity android:name=".Course.EditCourseActivity"></activity>
+        <activity android:name=".Term.EditTermActivity" />
+        <activity android:name=".Mentor.EditMentorActivity" />
+        <activity android:name=".Assessment.EditAssessmentActivity" />
+        <activity android:name=".Course.CourseViewActivity" />
         <activity android:name=".Course.CourseMainActivity" />
         <activity android:name=".Term.TermMainActivity">
             <intent-filter>
@@ -18,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <receiver android:name=".Notification.NotificationPublisher" />
     </application>
 
 </manifest>

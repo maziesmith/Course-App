@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".Course.CourseViewActivity">
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -162,28 +162,18 @@
                 android:textAlignment="center"
                 android:textSize="24sp" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </ScrollView>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/courseViewMentorRV"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/item_mentorview" />
 
             <Button
-                android:id="@+id/courseViewAddMentorBtn"
+                android:id="@+id/addMentorBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="15dp"
                 android:text="Add Mentor" />
+
+            <Button
+                android:id="@+id/courseViewMentorsBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="View Mentors" />
 
             <TextView
                 android:id="@+id/courseAssessmentInfoTV"
@@ -193,28 +183,19 @@
                 android:textAlignment="center"
                 android:textSize="24sp" />
 
-            <ScrollView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical" />
-            </ScrollView>
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/courseAssessmentInfoRV"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/item_assessmentview" />
 
             <Button
-                android:id="@+id/courseViewAddAssessmentBtn"
+                android:id="@+id/addAssessmentBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Assessment" />
+
+            <Button
+                android:id="@+id/courseViewAssessmentBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingBottom="15dp"
-                android:text="Add Assessment" />
+                android:text="View Assessments" />
 
             <Button
                 android:id="@+id/courseViewCancelBtn"
@@ -227,9 +208,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Save" />
-
         </LinearLayout>
-    </ScrollView>
 
-
+    </android.support.v4.widget.NestedScrollView>
 </FrameLayout>
+
+
+
+
+

@@ -20,6 +20,13 @@ public class MentorViewModel extends AndroidViewModel {
         allMentors = appRepository.getAllMentors();
     }
 
+
+
+    public LiveData<List<Mentor>> getAllMentors() {
+        return appRepository.getAllMentors();
+
+    }
+
     public void insert(Mentor mentor) {
         appRepository.insertMentor(mentor);
     }
@@ -33,6 +40,8 @@ public class MentorViewModel extends AndroidViewModel {
         appRepository.deleteMentor(mentor);
 
     }
+
+
 
     public void update(Mentor mentor) {
         appRepository.updateMentor(mentor);

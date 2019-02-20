@@ -25,13 +25,13 @@
         app:cardUseCompatPadding="false">
 
         <LinearLayout
-            android:id="@+id/courseLinearLayoutId"
+            android:id="@+id/cvCourseLinearLayoutId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/courseTitleTV"
+                android:id="@+id/cvCourseTitleTV"
                 android:layout_width="188dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
@@ -42,7 +42,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/courseStartTV"
+                android:id="@+id/cvCourseStartTV"
                 android:layout_width="188dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="190dp"
@@ -52,7 +52,7 @@
                 android:textAlignment="center" />
 
             <TextView
-                android:id="@+id/courseEndTV"
+                android:id="@+id/cvCourseEndTV"
                 android:layout_width="188dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="190dp"

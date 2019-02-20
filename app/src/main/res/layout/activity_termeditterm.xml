@@ -22,7 +22,7 @@
             android:text="Edit Term"
             android:textSize="24sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/termNameET"
+            app:layout_constraintBottom_toTopOf="@+id/editTermNameET"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
             app:layout_constraintVertical_chainStyle="spread_inside" />
 
         <EditText
-            android:id="@+id/termNameET"
+            android:id="@+id/editTermNameET"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -42,7 +42,7 @@
             android:ems="10"
             android:hint="Term Name"
             android:inputType="textPersonName"
-            app:layout_constraintBottom_toTopOf="@+id/termStartET"
+            app:layout_constraintBottom_toTopOf="@+id/editTermStartET"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -50,7 +50,7 @@
             tools:targetApi="o" />
 
         <EditText
-            android:id="@+id/termStartET"
+            android:id="@+id/editTermStartET"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -60,14 +60,14 @@
             android:ems="10"
             android:hint="Start Date"
             android:inputType="text"
-            app:layout_constraintBottom_toTopOf="@+id/termEndET"
+            app:layout_constraintBottom_toTopOf="@+id/editTermEndET"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             tools:targetApi="o" />
 
         <EditText
-            android:id="@+id/termEndET"
+            android:id="@+id/editTermEndET"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -80,11 +80,11 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/termStartET"
+            app:layout_constraintTop_toBottomOf="@+id/editTermStartET"
             tools:targetApi="o" />
 
         <Button
-            android:id="@+id/saveBtn"
+            android:id="@+id/editTermSaveBtn"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="8dp"
@@ -97,7 +97,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/cancelBtn"
+            android:id="@+id/editTermCancelBtn"
             android:layout_width="0dp"
             android:layout_height="60dp"
             android:layout_marginStart="8dp"
@@ -105,11 +105,11 @@
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
             android:text="Cancel"
-            app:layout_constraintBottom_toTopOf="@+id/saveBtn"
+            app:layout_constraintBottom_toTopOf="@+id/editTermSaveBtn"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/termEndET"
+            app:layout_constraintTop_toBottomOf="@+id/editTermEndET"
             app:layout_constraintVertical_bias="1.0" />
 
     </android.support.constraint.ConstraintLayout>

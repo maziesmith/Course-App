@@ -51,6 +51,7 @@
 
         <EditText
             android:id="@+id/termStartET"
+            android:focusable="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
@@ -68,6 +69,7 @@
 
         <EditText
             android:id="@+id/termEndET"
+            android:focusable="false"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
