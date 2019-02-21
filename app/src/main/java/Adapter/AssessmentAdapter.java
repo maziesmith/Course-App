@@ -115,13 +115,8 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
                 @Override
                 public void onClick(View v) {
 
-                    int i = getAdapterPosition();
-                    sCurrentAssessment = assessmentList.get(i);
-                    sAssessmentId = sCurrentAssessment.getAssessmentId();
+
                     Intent intent = new Intent(v.getContext(), EditAssessmentActivity.class);
-                    intent.putExtra("name", assessmentName.getText().toString());
-                    intent.putExtra("date", assessmentDate.getText().toString());
-                    intent.putExtra("type", assessmentType.getText().toString());
                     v.getContext().startActivity(intent);
 
                 }

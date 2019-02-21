@@ -116,11 +116,14 @@ public class CourseViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -163,11 +166,11 @@ public class CourseViewFragment extends Fragment {
             public void onClick(View v) {
 
                 Intent intent = new Intent(v.getContext(), EditCourseActivity.class);
-                intent.putExtra("courseName", courseName.getText().toString());
-                intent.putExtra("courseStart", courseStart.getText().toString());
-                intent.putExtra("courseEnd", courseEnd.getText().toString());
-                intent.putExtra("courseNotes", courseNotes.getText().toString());
-                intent.putExtra("courseStatus", courseStatus.getText().toString());
+//                intent.putExtra("courseName", courseName.getText().toString());
+//                intent.putExtra("courseStart", courseStart.getText().toString());
+//                intent.putExtra("courseEnd", courseEnd.getText().toString());
+//                intent.putExtra("courseNotes", courseNotes.getText().toString());
+//                intent.putExtra("courseStatus", courseStatus.getText().toString());
                 v.getContext().startActivity(intent);
 
             }
@@ -270,6 +273,7 @@ public class CourseViewFragment extends Fragment {
 
 
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

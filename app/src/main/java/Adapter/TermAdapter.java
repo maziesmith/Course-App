@@ -1,40 +1,27 @@
 package Adapter;
 
-import android.app.AppComponentFactory;
-import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.Course.CourseMainActivity;
 import com.example.jeff.schoolappv2.R;
-import com.example.jeff.schoolappv2.Term.EditTermActivity;
-import com.example.jeff.schoolappv2.Term.TermFragment;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
-import DatePicker.DatePickerFragment;
 import Model.Term;
 
 
-public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder>  {
+public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
     private Context context;
     private List<Term> termLists = new ArrayList<>();
@@ -43,6 +30,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder>  {
 
 
     public TermAdapter() {
+        notifyDataSetChanged();
 
     }
 
@@ -91,8 +79,6 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder>  {
     }
 
 
-
-
     //returns termLists size
 
     @Override
@@ -107,15 +93,12 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder>  {
     }
 
 
-
-
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView title;
         private TextView startDate;
         private TextView endDate;
         private FloatingActionButton floatingActionButton;
-        private ImageView editTerm;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -124,24 +107,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder>  {
             this.title = itemView.findViewById(R.id.termTitleTV);
             this.startDate = itemView.findViewById(R.id.termStartTV);
             this.endDate = itemView.findViewById(R.id.termEndTV);
-            this.editTerm = itemView.findViewById(R.id.editTermIV);
 
-
-
-
-
-
-            editTerm.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), EditTermActivity.class);
-                    intent.putExtra("title", title.getText().toString());
-                    intent.putExtra("startDate", startDate.getText().toString());
-                    intent.putExtra("endDate", endDate.getText().toString());
-
-                    v.getContext().startActivity(intent);
-                }
-            });
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -167,13 +133,6 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder>  {
                     //course by termid
                     //mentor by courseid
                     //assessment by courseId
-                     Intent intent = new Intent(v.getContext(), EditTermActivity.class);
-                                        intent.putExtra("title", title.getText().toString());
-                                        intent.putExtra("startDate", startDate.getText().toString());
-                                        intent.putExtra("endDate", endDate.getText().toString());
-
-
-                                        v.getContext().startActivity(intent);
 
 
                     return true;

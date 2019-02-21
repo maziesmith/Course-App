@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/editTermMenu"
+        android:title="@string/edit_term" />
+    <item
+        android:id="@+id/deleteTermMenu"
+        android:title="@string/delete_term" />
+</menu>

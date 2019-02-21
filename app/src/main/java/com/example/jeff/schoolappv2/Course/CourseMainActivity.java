@@ -13,6 +13,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.jeff.schoolappv2.R;
 
+import Adapter.TermAdapter;
+
 import static java.security.AccessController.getContext;
 
 public class CourseMainActivity extends AppCompatActivity implements CourseFragment.OnFragmentInteractionListener, AddCourseFragment.OnFragmentInteractionListener {
@@ -32,7 +34,7 @@ public class CourseMainActivity extends AppCompatActivity implements CourseFragm
         fragmentTransaction.commit();
         // replace fragment with selected fragment on screen
 
-        setTitle("Course");
+        setTitle("Term");
 
 
 

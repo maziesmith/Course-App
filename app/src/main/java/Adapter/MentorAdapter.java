@@ -104,9 +104,6 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.ViewHolder
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), EditMentorActivity.class);
-                    intent.putExtra("mentorName", mentorName.getText().toString());
-                    intent.putExtra("mentorPhone", mentorPhone.getText().toString());
-                    intent.putExtra("mentorEmail", mentorEmail.getText().toString());
                     v.getContext().startActivity(intent);
 
                 }

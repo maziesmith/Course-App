@@ -2,20 +2,16 @@ package Adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.Course.CourseViewActivity;
-import com.example.jeff.schoolappv2.Course.CourseViewFragment;
-import com.example.jeff.schoolappv2.Course.EditCourseActivity;
 import com.example.jeff.schoolappv2.R;
 
 import java.text.DateFormat;

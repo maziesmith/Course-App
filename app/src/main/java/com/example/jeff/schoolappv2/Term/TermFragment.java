@@ -117,8 +117,9 @@ public class TermFragment extends Fragment {
     // loads main menu item selection into view
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.termmain_menu, menu);
         super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.termmain_menu, menu);
+
     }
 
     @Override
@@ -177,14 +178,7 @@ public class TermFragment extends Fragment {
 
                 return true;
             case R.id.insertDataItem:
-                Term term = new Term("Term 1", new Date("1/2/12"), new Date("1/2/12"));
-                Term term1 = new Term("Term 2", new Date("1/2/12"), new Date("1/2/12"));
-                termViewModel.insert(term);
-               termViewModel.insert(term1);
-                Course course = new Course(term.getTermId(), "Term 1 Math", "in progress", "math 101a", new Date(1 / 5 / 12), new Date(2 / 5 / 12));
-                Course course1 = new Course(term1.getTermId(), "Term 2 Math", "in progress", "math 101a", new Date(1 / 5 / 12), new Date(2 / 5 / 12));
-                CourseFragment.getCourseViewModel().insert(course);
-                CourseFragment.getCourseViewModel().insert(course1);
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,4 +1,4 @@
-package com.example.jeff.schoolappv2.Course;
+package com.example.jeff.schoolappv2.Term;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
@@ -24,39 +24,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import Adapter.CourseAdapter;
 import Adapter.TermAdapter;
 import DatePicker.DatePickerFragment;
-import Model.Course;
+import Model.Term;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link EditCourseFragment.OnFragmentInteractionListener} interface
+ * {@link EditTermFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link EditCourseFragment#newInstance} factory method to
+ * Use the {@link EditTermFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EditCourseFragment extends Fragment {
+public class EditTermFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    private EditText courseTitle;
-    private EditText courseStart;
-    private EditText courseEnd;
-    private EditText courseStatus;
-    private EditText courseNotes;
-    private Button save;
-    private Button cancel;
-    private Course course;
-
-    //used for datepicker
-    private static final int START_CODE = 1;
-    private static final int END_CODE = 2;
-    private String selectedStart;
-    private String selectedEnd;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -64,7 +48,23 @@ public class EditCourseFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    public EditCourseFragment() {
+
+    private TextView editTerm;
+    private EditText termName;
+    private EditText termStart;
+    private EditText termEnd;
+    private Button cancel;
+    private Button save;
+
+    private Term term;
+
+    //used for datepicker
+    private static final int START_CODE = 1;
+    private static final int END_CODE = 2;
+    private String selectedStart;
+    private String selectedEnd;
+
+    public EditTermFragment() {
         // Required empty public constructor
     }
 
@@ -74,11 +74,11 @@ public class EditCourseFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment EditCourseFragment.
+     * @return A new instance of fragment EditTermFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static EditCourseFragment newInstance(String param1, String param2) {
-        EditCourseFragment fragment = new EditCourseFragment();
+    public static EditTermFragment newInstance(String param1, String param2) {
+        EditTermFragment fragment = new EditTermFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -93,79 +93,78 @@ public class EditCourseFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_courseeditcourse, container, false);
-        courseTitle = view.findViewById(R.id.editCourseNameET);
-        courseStart = view.findViewById(R.id.editStartDateET);
-        courseEnd = view.findViewById(R.id.editEndDateET);
-        courseStatus = view.findViewById(R.id.editStatusET);
-        courseNotes = view.findViewById(R.id.editNotesET);
-        save = view.findViewById(R.id.editAddCourseSaveBTN);
-        cancel = view.findViewById(R.id.editAddCourseCancelBTN);
+        View view = inflater.inflate(R.layout.fragment_termeditterm, container, false);
+
+        editTerm = view.findViewById(R.id.editTermTV);
+        termName = view.findViewById(R.id.editTermNameET);
+        termStart = view.findViewById(R.id.editTermStartET);
+        termEnd = view.findViewById(R.id.editTermEndET);
+        save = view.findViewById(R.id.editTermSaveBtn);
+        cancel = view.findViewById(R.id.editTermCancelBtn);
+        Toast.makeText(getContext(), "Term " + TermAdapter.getCurrentTermId(), Toast.LENGTH_SHORT).show();
+
         final FragmentManager fmDate = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
 
-
-        course = CourseAdapter.getCurrentCourse();
-        courseTitle.setText(course.getTitle());
+        term = TermAdapter.getCurrentTerm();
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
-        String courseStartString = formatter.format(course.getStartDate());
-        String courseEndString = formatter.format(course.getEndDate());
-        courseStart.setText(courseStartString);
-        courseEnd.setText(courseEndString);
-        courseStatus.setText(course.getStatus());
-        courseNotes.setText(course.getNote());
+        String termStartString = formatter.format(term.getStartDate());
+        String termEndString = formatter.format(term.getEndDate());
+        termName.setText(term.getTitle());
+        termStart.setText(termStartString);
+        termEnd.setText(termEndString);
 
-        //datepicker for courseStart Edittext
-        courseStart.setOnClickListener(new View.OnClickListener() {
+
+        //opens datepicker and sets startdate edittext to chose date
+        termStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppCompatDialogFragment newFragment = new DatePickerFragment();
-                newFragment.setTargetFragment(EditCourseFragment.this, START_CODE);
+                newFragment.setTargetFragment(EditTermFragment.this, START_CODE);
                 newFragment.show(fmDate, "datePicker");
 
             }
         });
 
-        //datepicker for courseEnd Edittext
-        courseEnd.setOnClickListener(new View.OnClickListener() {
+
+        //opens datepicker and sets enddate edittext to chosen date
+        termEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AppCompatDialogFragment newFragment = new DatePickerFragment();
-                newFragment.setTargetFragment(EditCourseFragment.this, END_CODE);
+                newFragment.setTargetFragment(EditTermFragment.this, END_CODE);
                 newFragment.show(fmDate, "datePicker");
 
             }
         });
 
-        //save button should update currently selected course
+
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                saveData();
+
+                updateData();
                 getActivity().onBackPressed();
-                Toast.makeText(getContext(), "Course Id " + CourseAdapter.getCurrentCourseId(), Toast.LENGTH_SHORT).show();
 
 
-
-                //changes back to previous screen
 
 
             }
         });
 
-        //cancels editing currently selected course
+        //cancel button
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-
+                //goes to previous screen
+                getActivity().onBackPressed();
             }
         });
 
@@ -173,42 +172,38 @@ public class EditCourseFragment extends Fragment {
         return view;
     }
 
+
+    public void updateData() {
+        String termNameString = termName.getText().toString();
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        Date startDate;
+        Date endDate;
+        try {
+            startDate = formatter.parse(termStart.getText().toString());
+            endDate = formatter.parse(termEnd.getText().toString());
+            term.setTitle(termNameString);
+
+            term.setStartDate(startDate);
+            term.setEndDate(endDate);
+            TermFragment.getTermViewModel().update(term);
+
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
     //used to set datepicker data to certain editText
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == START_CODE && resultCode == Activity.RESULT_OK) {
             selectedStart = data.getStringExtra("selectedDate");
-            courseStart.setText(selectedStart);
+            termStart.setText(selectedStart);
         } else if (requestCode == END_CODE && resultCode == Activity.RESULT_OK) {
             selectedEnd = data.getStringExtra("selectedDate");
-            courseEnd.setText(selectedEnd);
-        }
-    }
-
-    //save data
-    public void saveData() {
-        //course info
-        String courseTitleString = courseTitle.getText().toString();
-        String courseStatusString = courseStatus.getText().toString();
-
-
-        String courseNotesString = courseNotes.getText().toString();
-
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        Date startDate;
-        Date endDate;
-        try {
-            startDate = formatter.parse(courseStart.getText().toString());
-            endDate = formatter.parse(courseEnd.getText().toString());
-             course.setTitle(courseTitleString);
-             course.setNote(courseNotesString);
-             course.setStatus(courseStatusString);
-             course.setStartDate(startDate);
-             course.setEndDate(endDate);
-            CourseFragment.getCourseViewModel().update(course);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+            termEnd.setText(selectedEnd);
         }
     }
 

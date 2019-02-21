@@ -3,6 +3,7 @@ package com.example.jeff.schoolappv2.Course;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,11 +14,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
+import com.example.jeff.schoolappv2.Term.EditTermActivity;
 
 import java.util.List;
 
@@ -93,11 +98,21 @@ public class CourseFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        setHasOptionsMenu(true);
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+
+
+        inflater.inflate(R.menu.coursemain_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
 
     }
 
@@ -139,6 +154,25 @@ public class CourseFragment extends Fragment {
 
         Toast.makeText(view.getContext(), "Current Term " + TermAdapter.getCurrentTerm().getTermId(), Toast.LENGTH_SHORT).show();
         return view;
+
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.editTermMenu:
+                Intent intent = new Intent(getContext(), EditTermActivity.class);
+                getContext().startActivity(intent);
+
+
+                return true;
+            case R.id.deleteTermMenu:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
 
     }
 

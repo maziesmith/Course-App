@@ -12,6 +12,8 @@ import com.example.jeff.schoolappv2.Mentor.AddMentorFragment;
 import com.example.jeff.schoolappv2.Mentor.MentorViewFragment;
 import com.example.jeff.schoolappv2.R;
 
+import Adapter.CourseAdapter;
+
 public class CourseViewActivity extends AppCompatActivity implements CourseViewFragment.OnFragmentInteractionListener,
         MentorViewFragment.OnFragmentInteractionListener, AssessmentViewFragment.OnFragmentInteractionListener,
         AddMentorFragment.OnFragmentInteractionListener, AddAssessmentFragment.OnFragmentInteractionListener,
@@ -26,7 +28,7 @@ public class CourseViewActivity extends AppCompatActivity implements CourseViewF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        setTitle("Course View");
+        //setTitle("Course : " + CourseAdapter.getCurrentCourse().getTitle());
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_coursedetailedview);
