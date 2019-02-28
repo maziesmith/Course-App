@@ -7,15 +7,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
@@ -25,7 +24,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import Adapter.CourseAdapter;
-import Adapter.TermAdapter;
 import DatePicker.DatePickerFragment;
 import Model.Course;
 
@@ -143,14 +141,12 @@ public class EditCourseFragment extends Fragment {
             }
         });
 
+
         //save button should update currently selected course
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveData();
-                getActivity().onBackPressed();
-                Toast.makeText(getContext(), "Course Id " + CourseAdapter.getCurrentCourseId(), Toast.LENGTH_SHORT).show();
-
 
 
                 //changes back to previous screen
@@ -163,7 +159,7 @@ public class EditCourseFragment extends Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                getActivity().onBackPressed();
 
 
             }
@@ -187,30 +183,67 @@ public class EditCourseFragment extends Fragment {
 
     //save data
     public void saveData() {
-        //course info
-        String courseTitleString = courseTitle.getText().toString();
-        String courseStatusString = courseStatus.getText().toString();
+        //validation
+        boolean cancel = false;
 
 
-        String courseNotesString = courseNotes.getText().toString();
+        if (TextUtils.isEmpty(courseTitle.getText())) {
+            courseTitle.setError("Course Title must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseStatus.getText())) {
+            courseStatus.setError("Course status must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseStart.getText())) {
+            courseStart.setError("Start date must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseEnd.getText())) {
+            courseEnd.setError("End date must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseNotes.getText())) {
+            courseNotes.setError("A minimum of one note must be entered");
+            cancel = true;
+        }
 
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        Date startDate;
-        Date endDate;
-        try {
-            startDate = formatter.parse(courseStart.getText().toString());
-            endDate = formatter.parse(courseEnd.getText().toString());
-             course.setTitle(courseTitleString);
-             course.setNote(courseNotesString);
-             course.setStatus(courseStatusString);
-             course.setStartDate(startDate);
-             course.setEndDate(endDate);
-            CourseFragment.getCourseViewModel().update(course);
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (cancel) {
+            // Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+            // Toast.makeText(getContext(), "Save data", Toast.LENGTH_SHORT).show();
+            String courseTitleString = courseTitle.getText().toString();
+            String courseStatusString = courseStatus.getText().toString();
+
+
+            String courseNotesString = courseNotes.getText().toString();
+
+            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            Date startDate;
+            Date endDate;
+            try {
+                startDate = formatter.parse(courseStart.getText().toString());
+                endDate = formatter.parse(courseEnd.getText().toString());
+                course.setTitle(courseTitleString);
+                course.setNote(courseNotesString);
+                course.setStatus(courseStatusString);
+                course.setStartDate(startDate);
+                course.setEndDate(endDate);
+                CourseFragment.getCourseViewModel().update(course);
+                getActivity().finish();
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+
+
         }
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

@@ -4,14 +4,11 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import java.util.List;
 
 import Model.Assessment;
 import Repoisitory.AppRepository;
-
-import static android.support.constraint.Constraints.TAG;
 
 //viewmodel class used to interact with UI and DB and to survive configuration changes
 public class AssessmentViewModel extends AndroidViewModel {
@@ -43,5 +40,9 @@ public class AssessmentViewModel extends AndroidViewModel {
 
     public void delete(Assessment assessment) {
         appRepository.deleteAssessment(assessment);
+    }
+
+    public void deleteAssessmentByCourse(int CourseId){
+
     }
 }

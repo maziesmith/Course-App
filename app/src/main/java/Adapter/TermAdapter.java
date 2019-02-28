@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.Course.CourseMainActivity;
 import com.example.jeff.schoolappv2.R;
@@ -122,6 +123,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                     Intent intent = new Intent(context, CourseMainActivity.class);
                     context.startActivity(intent);
 
+
                 }
             });
 
@@ -130,9 +132,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
                 @Override
                 public boolean onLongClick(View v) {
                     //method to delete data from term by termid
-                    //course by termid
-                    //mentor by courseid
-                    //assessment by courseId
+                    Toast.makeText(v.getContext(), "Cannot Delete Term that has courses assigned", Toast.LENGTH_SHORT).show();
 
 
                     return true;
@@ -144,4 +144,7 @@ public class TermAdapter extends RecyclerView.Adapter<TermAdapter.ViewHolder> {
 
     }
 
+
 }
+
+

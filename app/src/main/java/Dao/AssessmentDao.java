@@ -20,7 +20,7 @@ public interface AssessmentDao {
     @Insert
     void insertAssessment (Assessment assessment);
 
-    @Update(onConflict = REPLACE)
+    @Update
     void updateAssessment (Assessment assessment);
 
     @Delete
@@ -29,10 +29,13 @@ public interface AssessmentDao {
     @Query("DELETE FROM assessment_table")
     void deleteAllAssessments();
 
+    @Query("DELETE FROM assessment_table Where courseId=:courseId")
+    void deleteAssessmentByCourse(int courseId);
+
     @Query("SELECT * FROM assessment_table")
     LiveData<List<Assessment>> getAllAssessments();
 
-    @Query("SELECT * FROM assessment_table WHERE courseId =:courseId")
+    @Query("SELECT * FROM assessment_table WHERE courseId=:courseId")
     LiveData<List<Assessment>> getAllAssessmentsForCourse(int courseId);
 
 }

@@ -90,7 +90,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:hint="ex: 123-122-1213"
-                android:inputType="textPersonName" />
+                android:inputType="phone" />
         </LinearLayout>
 
         <Button

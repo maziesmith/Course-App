@@ -4,11 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
@@ -96,6 +98,7 @@ public class EditMentorFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 clearText();
+                getActivity().onBackPressed();
 
             }
         });
@@ -105,9 +108,9 @@ public class EditMentorFragment extends Fragment {
             public void onClick(View v) {
                 //updates data on click, loads previous fragment back, then removes data from textview
                 updateMentor();
+                Toast.makeText(v.getContext(), "Mentor Id " + MentorAdapter.getCurrentMentor().getMentorId(), Toast.LENGTH_SHORT).show();
 
 
-                getActivity().onBackPressed();
 
 
             }
@@ -126,17 +129,40 @@ public class EditMentorFragment extends Fragment {
     }
 
     public void updateMentor() {
-        String nameString = mentorName.getText().toString();
-        String phoneString = mentorPhone.getText().toString();
-
-        String emailString = mentorEmail.getText().toString();
-
-        mentor.setMentorName(nameString);
-        mentor.setMentorEmail(emailString);
-        mentor.setMentorPhone(phoneString);
 
 
-        MentorViewFragment.getMentorViewModel().update(mentor);
+        boolean cancel = false;
+
+
+        if (TextUtils.isEmpty(mentorName.getText())) {
+            mentorName.setError("Mentor name must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(mentorEmail.getText())) {
+            mentorEmail.setError("mentor email must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(mentorPhone.getText())) {
+            mentorPhone.setError("Mentor phone must be entered");
+            cancel = true;
+        }
+
+
+        if (cancel) {
+           // Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+           // Toast.makeText(getContext(), "Save Data", Toast.LENGTH_SHORT).show();
+            mentor.setMentorName(mentorName.getText().toString());
+            mentor.setMentorEmail(mentorEmail.getText().toString());
+            mentor.setMentorPhone(mentorPhone.getText().toString());
+
+
+            MentorViewFragment.getMentorViewModel().update(mentor);
+            getActivity().onBackPressed();
+
+            clearText();
+        }
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

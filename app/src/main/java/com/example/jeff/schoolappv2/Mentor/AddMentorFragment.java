@@ -4,8 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,12 +12,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.jeff.schoolappv2.Course.CourseViewActivity;
-import com.example.jeff.schoolappv2.Course.CourseViewFragment;
 import com.example.jeff.schoolappv2.R;
 
 import Adapter.CourseAdapter;
 import Model.Mentor;
+import TextValidation.Validator;
 import ViewModel.MentorViewModel;
 
 /**
@@ -42,6 +40,7 @@ public class AddMentorFragment extends Fragment {
 
     private static MentorViewModel sMentorViewModel;
     private Mentor mentor;
+    private Validator validator = new Validator();
 
     private EditText mentorName;
     private EditText mentorPhone;
@@ -98,6 +97,7 @@ public class AddMentorFragment extends Fragment {
         cancel = view.findViewById(R.id.cancelMentorBTN);
         save = view.findViewById(R.id.saveMentorBTN);
 
+
         //cancel adding mentor
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,13 +113,6 @@ public class AddMentorFragment extends Fragment {
             public void onClick(View v) {
                 //saves data on click, loads previous fragment back, then removes data from textview
                 saveMentor();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.courseActivityViewFrame, CourseViewActivity.getCourseViewFragment());
-                ft.commit();
-                clearText();
-
-
 
 
             }
@@ -129,6 +122,7 @@ public class AddMentorFragment extends Fragment {
         return view;
 
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -144,13 +138,40 @@ public class AddMentorFragment extends Fragment {
         mentorName.setText("");
     }
 
-    public void saveMentor(){
-        mentor = new Mentor(CourseAdapter.getCurrentCourseId(),
-                mentorName.getText().toString(), mentorPhone.getText().toString(),
-                mentorEmail.getText().toString());
+    public void saveMentor() {
+        //validation
+        boolean cancel = false;
 
-        MentorViewFragment.getMentorViewModel().insert(mentor);
+
+        if (TextUtils.isEmpty(mentorName.getText())) {
+            mentorName.setError("Mentor name must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(mentorEmail.getText())) {
+            mentorEmail.setError("mentor email must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(mentorPhone.getText())) {
+            mentorPhone.setError("Mentor phone must be entered");
+            cancel = true;
+        }
+
+
+        if (cancel) {
+            //Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+           // Toast.makeText(getContext(), "Save Data", Toast.LENGTH_SHORT).show();
+            mentor = new Mentor(CourseAdapter.getCurrentCourseId(),
+                    mentorName.getText().toString(), mentorPhone.getText().toString(),
+                    mentorEmail.getText().toString());
+
+            MentorViewFragment.getMentorViewModel().insert(mentor);
+            getActivity().onBackPressed();
+
+            clearText();
+        }
     }
+
 
     @Override
     public void onAttach(Context context) {

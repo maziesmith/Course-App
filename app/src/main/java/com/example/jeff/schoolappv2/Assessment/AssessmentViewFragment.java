@@ -3,16 +3,17 @@ package com.example.jeff.schoolappv2.Assessment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 
 import com.example.jeff.schoolappv2.R;
 
@@ -46,11 +47,14 @@ public class AssessmentViewFragment extends Fragment {
     private static final AssessmentAdapter sAssessmentAdapter = new AssessmentAdapter();
     private static AssessmentViewModel sAssessmentViewModel;
 
+
     private RecyclerView assessmentRecyclerView;
-    private Button backBtn;
+    private FloatingActionButton backFab;
+    private FloatingActionButton addFab;
 
 
-    private OnFragmentInteractionListener listener;
+    String add = "add";
+    String edit = "edit";
 
 
     public AssessmentViewFragment() {
@@ -98,7 +102,8 @@ public class AssessmentViewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_assessmentview, container, false);
 
-        backBtn = view.findViewById(R.id.assessmentViewBackBtn);
+        addFab = view.findViewById(R.id.assessmentAddFab);
+        backFab = view.findViewById(R.id.assesmentBackFab);
 
         //sets assessment recyclerview
         assessmentRecyclerView = view.findViewById(R.id.viewAssessmentRV);
@@ -107,7 +112,7 @@ public class AssessmentViewFragment extends Fragment {
         assessmentRecyclerView.setAdapter(sAssessmentAdapter);
 
 
-        sAssessmentViewModel = ViewModelProviders.of(getActivity()).get(AssessmentViewModel.class);
+        sAssessmentViewModel = ViewModelProviders.of(this).get(AssessmentViewModel.class);
         sAssessmentViewModel.getAllAssessmentsByCourse(CourseAdapter.getCurrentCourseId()).observe(this, new Observer<List<Assessment>>() {
             @Override
             public void onChanged(@Nullable List<Assessment> assessments) {
@@ -117,11 +122,20 @@ public class AssessmentViewFragment extends Fragment {
             }
         });
 
-        backBtn.setOnClickListener(new View.OnClickListener() {
+        backFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //back button to go to course
                 getActivity().onBackPressed();
+            }
+        });
+
+        addFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AddAssessmentActivity.class);
+                v.getContext().startActivity(intent);
+
             }
         });
 

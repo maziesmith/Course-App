@@ -38,7 +38,6 @@ public class CourseViewActivity extends AppCompatActivity implements CourseViewF
         fragmentTransaction.replace(R.id.courseActivityViewFrame, sCourseViewFragment);
         fragmentTransaction.commit();
 
-
     }
 
     @Override

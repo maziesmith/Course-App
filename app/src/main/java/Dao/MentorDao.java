@@ -9,7 +9,6 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
-import Model.Course;
 import Model.Mentor;
 
 @Dao
@@ -27,6 +26,10 @@ public interface MentorDao {
 
     @Query("DELETE FROM mentor_table")
     void deleteAllMentors();
+
+
+    @Query("DELETE FROM mentor_table Where courseId=:courseId")
+    void deleteMentorByCourse(int courseId);
 
     @Query("SELECT * FROM mentor_table")
     LiveData<List<Mentor>> getAllMentors();

@@ -19,7 +19,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 import com.example.jeff.schoolappv2.Term.EditTermActivity;
@@ -132,7 +131,7 @@ public class CourseFragment extends Fragment {
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fm.beginTransaction();
                 fragmentTransaction.replace(R.id.courseMainFrameLayout, sAddCourseFragment);
-                fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null).commit();
             }
         });
 
@@ -152,7 +151,6 @@ public class CourseFragment extends Fragment {
             }
         });
 
-        Toast.makeText(view.getContext(), "Current Term " + TermAdapter.getCurrentTerm().getTermId(), Toast.LENGTH_SHORT).show();
         return view;
 
     }
@@ -167,9 +165,7 @@ public class CourseFragment extends Fragment {
 
 
                 return true;
-            case R.id.deleteTermMenu:
 
-                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

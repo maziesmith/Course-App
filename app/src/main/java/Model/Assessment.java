@@ -17,19 +17,17 @@ public class Assessment {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     private int assessmentId;
-    @ColumnInfo(name = "courseId")
     private int courseId;
     private String type;
-    private String title;
+    private String name;
     @TypeConverters(Converters.class)
     private Date dateDue;
 
 
-
-    public Assessment(int courseId, String type, String title, Date dateDue) {
+    public Assessment(int courseId, String type, String name, Date dateDue) {
         this.courseId = courseId;
         this.type = type;
-        this.title = title;
+        this.name = name;
         this.dateDue = dateDue;
 
     }
@@ -39,7 +37,7 @@ public class Assessment {
     }
 
     public void setAssessmentId(int assessmentId) {
-        assessmentId = assessmentId;
+        this.assessmentId = assessmentId;
     }
 
     public int getCourseId() {
@@ -47,7 +45,7 @@ public class Assessment {
     }
 
     public void setCourseId(int courseId) {
-        courseId = courseId;
+        this.courseId = courseId;
     }
 
     @NonNull
@@ -60,12 +58,12 @@ public class Assessment {
     }
 
     @NonNull
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(@NonNull String title) {
-        this.title = title;
+    public void setName(@NonNull String name) {
+        this.name = name;
     }
 
     @NonNull

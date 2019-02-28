@@ -7,10 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Assessment.AssessmentViewFragment;
 import com.example.jeff.schoolappv2.Assessment.EditAssessmentActivity;
 import com.example.jeff.schoolappv2.R;
 
@@ -25,10 +25,9 @@ import ViewModel.AssessmentViewModel;
 public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.ViewHolder> {
 
     private Context context;
-    private List<Assessment> assessmentList = new ArrayList<>();
+    private List<Assessment> assessmentLists = new ArrayList<>();
     private static Assessment sCurrentAssessment;
     private AssessmentViewModel assessmentViewModel;
-    private static int sAssessmentId;
 
 
     public AssessmentAdapter() {
@@ -41,16 +40,13 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
     }
 
     public List<Assessment> getAssessmentList() {
-        return assessmentList;
+        return assessmentLists;
     }
 
     public static Assessment getCurrentAssessment() {
         return sCurrentAssessment;
     }
 
-    public static int getAssessmentId() {
-        return sAssessmentId;
-    }
 
     public AssessmentViewModel getAssessmentViewModel() {
         return assessmentViewModel;
@@ -66,16 +62,19 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        //gets currently clicked mentor
-        sCurrentAssessment = assessmentList.get(i);
-        //sets assessmentId
-        sAssessmentId = sCurrentAssessment.getAssessmentId();
+        //gets currently clicked assessment
+        sCurrentAssessment = assessmentLists.get(i);
+
         //sets currently clicked mentor information to textview
-        viewHolder.assessmentName.setText(sCurrentAssessment.getTitle());
+        viewHolder.assessmentName.setText(sCurrentAssessment.getName());
         viewHolder.assessmentType.setText(sCurrentAssessment.getType());
+
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        String date = formatter.format(sCurrentAssessment.getDateDue());
-        viewHolder.assessmentDate.setText(date);
+                if (sCurrentAssessment.getDateDue()!= null) {
+                    String dateDue = formatter.format(sCurrentAssessment.getDateDue());
+                    viewHolder.assessmentDate.setText(dateDue);
+                }
+
 
 
     }
@@ -83,12 +82,12 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return assessmentList.size();
+        return assessmentLists.size();
     }
 
-    //updates the mentor list
+    //updates the assessment list
     public void setAssessment(List<Assessment> assessments) {
-        assessmentList = assessments;
+        assessmentLists = assessments;
         notifyDataSetChanged();
     }
 
@@ -97,8 +96,6 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
         private TextView assessmentName;
         private TextView assessmentType;
         private TextView assessmentDate;
-        private ImageButton editAssessment;
-        private ImageButton deleteAssessment;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -107,37 +104,32 @@ public class AssessmentAdapter extends RecyclerView.Adapter<AssessmentAdapter.Vi
             assessmentName = itemView.findViewById(R.id.nameAssessmentTV);
             assessmentDate = itemView.findViewById(R.id.dateAssessmentTV);
             assessmentType = itemView.findViewById(R.id.typeAssessmentTV);
-            editAssessment = itemView.findViewById(R.id.itemEditAssessmentIB);
-            deleteAssessment = itemView.findViewById(R.id.itemDeleteAssesmentIB);
 
 
-            editAssessment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-
-                    Intent intent = new Intent(v.getContext(), EditAssessmentActivity.class);
-                    v.getContext().startActivity(intent);
-
-                }
-            });
-
-            deleteAssessment.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    //deletes currently selected assessment
-                    ;
-
-                }
-            });
-
-
-            // on click for when mentor is clicked in list
+            // on click for when mentor is clicked in list opens edit Assessment
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(v.getContext(), sCurrentAssessment.getDateDue().toString(), Toast.LENGTH_SHORT).show();
 
+                    int i = getAdapterPosition();
+                    //sets current assessment to currently selected assessment
+                    sCurrentAssessment = assessmentLists.get(i);
+                    Intent intent = new Intent(v.getContext(), EditAssessmentActivity.class);
+                    v.getContext().startActivity(intent);
+
+
+
+                }
+            });
+
+
+            //when long click is held assessment is deleted
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+
+                    AssessmentViewFragment.getAssessmentViewModel().delete(sCurrentAssessment);
+                    return true;
                 }
             });
 

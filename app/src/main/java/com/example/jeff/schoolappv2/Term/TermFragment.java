@@ -21,15 +21,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Assessment.AssessmentViewFragment;
 import com.example.jeff.schoolappv2.Course.CourseFragment;
+import com.example.jeff.schoolappv2.Mentor.MentorViewFragment;
 import com.example.jeff.schoolappv2.R;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
 import Adapter.TermAdapter;
 import Database.AppDatabase;
+import Model.Assessment;
 import Model.Course;
+import Model.Mentor;
 import Model.Term;
 import ViewModel.CourseViewModel;
 import ViewModel.TermViewModel;
@@ -110,17 +117,15 @@ public class TermFragment extends Fragment {
         }
 
 
-
-
     }
 
     // loads main menu item selection into view
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.termmain_menu, menu);
+//    @Override
+//    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+//        super.onCreateOptionsMenu(menu, inflater);
+//        inflater.inflate(R.menu.termmain_menu, menu);
 
-    }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -168,22 +173,18 @@ public class TermFragment extends Fragment {
 
 
     //menu option items selected
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.deleteDataItem:
-                Toast.makeText(getContext(), "Delete Data", Toast.LENGTH_SHORT).show();
-                termViewModel.deleteAll();
-
-
-                return true;
-            case R.id.insertDataItem:
-
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.insertDataItem:
+//                insertData();
+//
+//
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -191,6 +192,31 @@ public class TermFragment extends Fragment {
             mListener.onFragmentInteraction(uri);
         }
     }
+
+    //used to insert sample data
+    public void insertData() {
+        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+        String termStart = "06/01/2019";
+        String termEnd = "08/01/2019";
+
+        try {
+            Date termStartDate = formatter.parse(termStart);
+            Date termEndDate = formatter.parse(termEnd);
+
+            Term term = new Term("Summer ", termStartDate, termEndDate);
+            TermFragment.getTermViewModel().insert(term);
+            Course course = new Course(term.getTermId(), "Math", "Current", "Class will cover basic College math", termStartDate, termEndDate);
+            CourseFragment.getCourseViewModel().insert(course);
+            Mentor mentor = new Mentor(course.getCourseId(), "Tim L", "1231231234", "tim@mentor.edu");
+            MentorViewFragment.getMentorViewModel().insert(mentor);
+            Assessment assessment = new Assessment(course.getCourseId(), "Objective", "Math Final", termEndDate);
+            AssessmentViewFragment.getAssessmentViewModel().insert(assessment);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     @Override
     public void onAttach(Context context) {
@@ -223,8 +249,6 @@ public class TermFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-
-
 
 
 }

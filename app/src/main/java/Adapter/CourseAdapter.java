@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Course.CourseFragment;
 import com.example.jeff.schoolappv2.Course.CourseViewActivity;
+import com.example.jeff.schoolappv2.Mentor.MentorViewFragment;
 import com.example.jeff.schoolappv2.R;
 
 import java.text.DateFormat;
@@ -147,12 +149,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.ViewHolder
                     sCurrentCourseId = sCurrentCourse.getCourseId();
 
                     //deletes course
-                    //CourseFragment.getCourseViewModel().delete(sCurrentCourse);
+                    CourseFragment.getCourseViewModel().delete(sCurrentCourse);
                     //delete mentor by courseId
-
                     //delete assessment by courseId
-                    Toast.makeText(v.getContext()," Course Id " + getCurrentCourseId(), Toast.LENGTH_SHORT).show();
-
 
                     return true;
                 }

@@ -1,16 +1,22 @@
 package com.example.jeff.schoolappv2.Assessment;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.jeff.schoolappv2.R;
 
@@ -20,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import Adapter.AssessmentAdapter;
+import DatePicker.DatePickerFragment;
 import Model.Assessment;
 
 /**
@@ -43,15 +50,20 @@ public class EditAssessmentFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private EditText assessmentName;
-    private EditText assessmentDueDate;
-    private RadioButton objective;
+    private EditText assessmentDate;
     private RadioButton performance;
-    private RadioGroup radioGroup;
-    private Button save;
+    private RadioButton objective;
     private Button cancel;
+    private Button save;
 
     private Assessment assessment;
-    private String assessmentType;
+
+
+    private static final int DATE_CODE = 1;
+    private String date;
+    private String assessmentTypeString;
+    private Date assessmentDueDate;
+
 
     public EditAssessmentFragment() {
         // Required empty public constructor
@@ -89,44 +101,49 @@ public class EditAssessmentFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_assessmenteditassessment, container, false);
+
         assessmentName = view.findViewById(R.id.editAssessmentNameET);
-        assessmentDueDate = view.findViewById(R.id.editAssessmentDueDateET);
-        save = view.findViewById(R.id.editAssessmentSaveBTN);
-        cancel = view.findViewById(R.id.editAssessmentCancelBTN);
-        radioGroup = view.findViewById(R.id.editRadioGroup);
-        objective = view.findViewById(R.id.editObjectiveRB);
+        assessmentDate = view.findViewById(R.id.editAssessmentDueDateET);
         performance = view.findViewById(R.id.editPerformanceRB);
+        objective = view.findViewById(R.id.editObjectiveRB);
+        cancel = view.findViewById(R.id.editAssessmentCancelBTN);
+        save = view.findViewById(R.id.editAssessmentSaveBTN);
+        final FragmentManager fmDate = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
 
 
         assessment = AssessmentAdapter.getCurrentAssessment();
-        assessmentName.setText(assessment.getTitle());
-
+        assessmentName.setText(assessment.getName());
         DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        String dateDueString = formatter.format(assessment.getDateDue());
+        if (assessment.getDateDue() != null) {
+            String currentAssessmentDateString = formatter.format(assessment.getDateDue());
+            assessmentDate.setText(currentAssessmentDateString);
+        }
 
-        assessmentDueDate.setText(dateDueString);
-        String type = assessment.getType();
-
-        if (type.equals("performance")) {
+        if (assessment.getType().equals("Performance")) {
             performance.setChecked(true);
             objective.setChecked(false);
-        } else if (type.equals("objective")) {
+        } else if (assessment.getType().equals("Objective")) {
             objective.setChecked(true);
             performance.setChecked(false);
+
         }
+
+
+        assessmentDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppCompatDialogFragment newFragment = new DatePickerFragment();
+                newFragment.setTargetFragment(EditAssessmentFragment.this, DATE_CODE);
+                newFragment.show(fmDate, "datePicker");
+
+            }
+        });
 
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                try {
-                    updateData();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                clearData();
-                getActivity().onBackPressed();
+                updateData();
 
 
             }
@@ -135,10 +152,7 @@ public class EditAssessmentFragment extends Fragment {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clearData();
                 getActivity().onBackPressed();
-
-
             }
         });
 
@@ -147,38 +161,64 @@ public class EditAssessmentFragment extends Fragment {
 
     }
 
-    public void clearData() {
-        assessmentName.setText("");
-        performance.setChecked(false);
-        objective.setChecked(false);
-        assessmentDueDate.setText("");
+    public void updateData() {
+        boolean cancel = false;
+
+        if (TextUtils.isEmpty(assessmentName.getText())) {
+            assessmentName.setError("Assessment name must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(assessmentDate.getText())) {
+            assessmentDate.setError("Assessment due date must be selected");
+            cancel = true;
+        }
+        if (!performance.isChecked() && !objective.isChecked()) {
+            performance.setError("Assessment type must be selected");
+            cancel = true;
+        }
+
+
+        if (cancel) {
+            // Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+            // Toast.makeText(getContext(), "Save data", Toast.LENGTH_SHORT).show();
+            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+
+            if (performance.isChecked()) {
+                assessmentTypeString = "Performance";
+            } else if (objective.isChecked()) {
+                assessmentTypeString = "Objective";
+
+            }
+
+
+            try {
+                assessmentDueDate = formatter.parse(assessmentDate.getText().toString());
+
+                Toast.makeText(getContext(), "Current Assessment " + AssessmentAdapter.getCurrentAssessment().getAssessmentId(), Toast.LENGTH_SHORT).show();
+
+                assessment.setName(assessmentName.getText().toString());
+                assessment.setDateDue(assessmentDueDate);
+                assessment.setType(assessmentTypeString);
+
+
+                AssessmentViewFragment.getAssessmentViewModel().update(assessment);
+                getActivity().onBackPressed();
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
-
-    public void updateData() throws ParseException {
-
-        //converts date from string to date format
-
-        String nameString = assessmentName.getText().toString();
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        Date dueDate;
-        if (objective.isChecked()) {
-            assessmentType = "Objective";
-        } else if (performance.isChecked()) {
-            assessmentType = "performance";
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == DATE_CODE && resultCode == Activity.RESULT_OK) {
+            date = data.getStringExtra("selectedDate");
+            assessmentDate.setText(date);
         }
-        dueDate = formatter.parse(assessmentDueDate.getText().toString());
-
-
-        assessment.setTitle(nameString);
-        assessment.setType(assessmentType);
-        assessment.setDateDue(dueDate);
-
-
-        AssessmentViewFragment.getAssessmentViewModel().update(assessment);
-        clearData();
-
-
     }
 
     // TODO: Rename method, update argument and hook method into UI event

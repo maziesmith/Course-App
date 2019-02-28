@@ -81,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Mentor Phone"
+
                 android:textAlignment="center" />
 
             <EditText
@@ -89,8 +90,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:hint="ex: 123-122-1213"
-                android:inputType="textPersonName" />
+                android:hint="ex: 1234352133"
+                android:inputType="phone"
+                android:maxLength="10" />
         </LinearLayout>
 
         <Button

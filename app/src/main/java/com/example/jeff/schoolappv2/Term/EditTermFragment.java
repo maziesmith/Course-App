@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -154,8 +155,6 @@ public class EditTermFragment extends Fragment {
                 getActivity().onBackPressed();
 
 
-
-
             }
         });
 
@@ -174,22 +173,45 @@ public class EditTermFragment extends Fragment {
 
 
     public void updateData() {
-        String termNameString = termName.getText().toString();
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        Date startDate;
-        Date endDate;
-        try {
-            startDate = formatter.parse(termStart.getText().toString());
-            endDate = formatter.parse(termEnd.getText().toString());
-            term.setTitle(termNameString);
-
-            term.setStartDate(startDate);
-            term.setEndDate(endDate);
-            TermFragment.getTermViewModel().update(term);
+        //validation
+        boolean cancel = false;
 
 
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (TextUtils.isEmpty(termName.getText())) {
+            termName.setError("Mentor name must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(termStart.getText())) {
+            termStart.setError("Start date must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(termEnd.getText())) {
+            termEnd.setError("End date must be selected");
+            cancel = true;
+        }
+
+
+        if (cancel) {
+           // Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+           // Toast.makeText(getContext(), "Save Data", Toast.LENGTH_SHORT).show();
+            String termNameString = termName.getText().toString();
+            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            Date startDate;
+            Date endDate;
+            try {
+                startDate = formatter.parse(termStart.getText().toString());
+                endDate = formatter.parse(termEnd.getText().toString());
+                term.setTitle(termNameString);
+
+                term.setStartDate(startDate);
+                term.setEndDate(endDate);
+                TermFragment.getTermViewModel().update(term);
+
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
 

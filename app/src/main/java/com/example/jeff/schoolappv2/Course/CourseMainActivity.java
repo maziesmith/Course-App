@@ -1,21 +1,17 @@
 package com.example.jeff.schoolappv2.Course;
 
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.jeff.schoolappv2.R;
 
-import Adapter.TermAdapter;
-
-import static java.security.AccessController.getContext;
+import Alarm.AlarmClass;
 
 public class CourseMainActivity extends AppCompatActivity implements CourseFragment.OnFragmentInteractionListener, AddCourseFragment.OnFragmentInteractionListener {
     private static final CourseFragment sCourseFragment = new CourseFragment();
@@ -31,12 +27,11 @@ public class CourseMainActivity extends AppCompatActivity implements CourseFragm
         setContentView(R.layout.activity_coursemain);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.courseMainFrameLayout, sCourseFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         // replace fragment with selected fragment on screen
 
-        setTitle("Term");
-
-
+        setTitle("Courses");
 
     }
 
@@ -47,6 +42,4 @@ public class CourseMainActivity extends AppCompatActivity implements CourseFragm
     }
 
 
-
-
-    }
+}

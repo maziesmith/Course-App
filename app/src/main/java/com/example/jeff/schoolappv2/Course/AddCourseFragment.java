@@ -1,19 +1,25 @@
 package com.example.jeff.schoolappv2.Course;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -27,10 +33,12 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import Adapter.TermAdapter;
+import Alarm.AlarmClass;
 import DatePicker.DatePickerFragment;
 import Model.Assessment;
 import Model.Course;
 import Model.Mentor;
+import TextValidation.Validator;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -56,12 +64,14 @@ public class AddCourseFragment extends Fragment {
     private Assessment assessment;
     private static final AddMentorFragment sAddMentorFragment = new AddMentorFragment();
     private static final AddAssessmentFragment sAddAssessmentFragment = new AddAssessmentFragment();
+    private Validator validator;
 
     //used for datepicker
     private static final int START_CODE = 1;
     private static final int END_CODE = 2;
     private String selectedStart;
     private String selectedEnd;
+
 
     //layout button,editext
     private EditText courseTitle;
@@ -71,6 +81,7 @@ public class AddCourseFragment extends Fragment {
     private EditText courseNotes;
     private Button save;
     private Button cancel;
+    private CheckBox notification;
 
 
     private OnFragmentInteractionListener mListener;
@@ -130,6 +141,8 @@ public class AddCourseFragment extends Fragment {
         courseNotes = view.findViewById(R.id.notesET);
         save = view.findViewById(R.id.addCourseSaveBTN);
         cancel = view.findViewById(R.id.addCourseCancelBTN);
+        notification = view.findViewById(R.id.addCoursetAlertCB);
+
 
         final FragmentManager fmDate = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
 
@@ -155,26 +168,19 @@ public class AddCourseFragment extends Fragment {
 
             }
         });
+
+
+
+
         //save button
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getContext())
-//                        .setSmallIcon(R.drawable.ic_share_black_24dp)
-//                        .setContentTitle("Test")
-//                        .setContentText("Notification");
-//
-//
-//                NotificationManager notificationManager = (NotificationManager)getActivity().getSystemService(getActivity().NOTIFICATION_SERVICE);
-//                notificationManager.notify(001, mBuilder.build());
 
 
                 //saves data
                 saveData();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.courseMainFrameLayout, CourseMainActivity.getCourseFragment());
-                fragmentTransaction.commit();
+
 
             }
         });
@@ -194,6 +200,10 @@ public class AddCourseFragment extends Fragment {
 
 
     }
+
+
+
+
 
     //used to set datepicker data to certain editText
     @Override
@@ -221,30 +231,86 @@ public class AddCourseFragment extends Fragment {
 
     //save data
     public void saveData() {
-        //course info
-        String courseTitleString = courseTitle.getText().toString();
-        String courseStatusString = courseStatus.getText().toString();
+        //validation
+        boolean cancel = false;
 
 
-        String courseNotesString = courseNotes.getText().toString();
-
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        Date startDate;
-        Date endDate;
-        try {
-            startDate = formatter.parse(courseStart.getText().toString());
-            endDate = formatter.parse(courseEnd.getText().toString());
-            course = new Course(TermAdapter.getCurrentTermId(), courseTitleString, courseStatusString, courseNotesString, startDate, endDate);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (TextUtils.isEmpty(courseTitle.getText())) {
+            courseTitle.setError("Course Title must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseStatus.getText())) {
+            courseStatus.setError("Course status must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseStart.getText())) {
+            courseStart.setError("Start date must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseEnd.getText())) {
+            courseEnd.setError("End date must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(courseNotes.getText())) {
+            courseNotes.setError("A minimum of one note must be entered");
+            cancel = true;
         }
 
 
-        CourseFragment.getCourseViewModel().insert(course);
-        clearData();
+        if (cancel) {
+            // Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+            //Toast.makeText(getContext(), "Save Data", Toast.LENGTH_SHORT).show();
+
+            String courseTitleString = courseTitle.getText().toString();
+            String courseStatusString = courseStatus.getText().toString();
 
 
+            String courseNotesString = courseNotes.getText().toString();
+
+            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            Date startDate;
+            Date endDate;
+            try {
+                startDate = formatter.parse(courseStart.getText().toString());
+                endDate = formatter.parse(courseEnd.getText().toString());
+                if (notification.isChecked()){
+                    //notification for startdate
+
+                    Intent startIntent = new Intent(getActivity(), AlarmClass.class);
+                    startIntent.putExtra("name", courseTitle.getText().toString());
+                    startIntent.putExtra("startDate", "Course is Starting today " + startDate);
+                    PendingIntent startSender = PendingIntent.getBroadcast(getActivity(), 0, startIntent, 0);
+                    AlarmManager startAlarmManager = (AlarmManager) getActivity().getSystemService(getContext().ALARM_SERVICE);
+                    startAlarmManager.set(AlarmManager.RTC_WAKEUP, startDate.getTime(), startSender);
+
+                    //notification for end of course
+
+                    Intent endIntent = new Intent(getActivity(), AlarmClass.class);
+                    endIntent.putExtra("name", courseTitle.getText().toString());
+                    endIntent.putExtra("startDate", "Course is ending today " + endDate);
+                    PendingIntent endSender = PendingIntent.getBroadcast(getActivity(), 1, endIntent, 0);
+                    AlarmManager endAlarmManager = (AlarmManager) getActivity().getSystemService(getContext().ALARM_SERVICE);
+                    endAlarmManager.set(AlarmManager.RTC_WAKEUP, endDate.getTime(), endSender);
+
+
+
+                }
+                course = new Course(TermAdapter.getCurrentTermId(), courseTitleString, courseStatusString, courseNotesString, startDate, endDate);
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
+            CourseFragment.getCourseViewModel().insert(course);
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.replace(R.id.courseMainFrameLayout, CourseMainActivity.getCourseFragment());
+            fragmentTransaction.commit();
+            clearData();
+
+        }
     }
 
 

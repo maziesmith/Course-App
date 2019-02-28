@@ -26,12 +26,17 @@ public class EditMentorActivity extends AppCompatActivity implements EditMentorF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_mentor);
 
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.activityEditMentorFrame, sEditMentorFragment);
-        ft.commit();
 
-    }
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.activityEditMentorFrame, sEditMentorFragment);
+            ft.commit();
+
+
+        }
+
+
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

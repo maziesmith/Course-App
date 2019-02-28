@@ -1,6 +1,7 @@
 package com.example.jeff.schoolappv2.Term;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.arch.lifecycle.LiveData;
 import android.content.Context;
 import android.content.Intent;
@@ -13,13 +14,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Mentor.MentorViewFragment;
 import com.example.jeff.schoolappv2.Notification.NotificationUtils;
 import com.example.jeff.schoolappv2.R;
 
@@ -157,39 +161,9 @@ public class AddTermFragment extends Fragment {
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-
-                String name = termName.getText().toString();
-                Date startDate = null;
-                Date endDate = null;
-                try {
-                    startDate = formatter.parse(termStart.getText().toString());
-                    endDate = formatter.parse(termEnd.getText().toString());
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                term = new Term(name, startDate, endDate);
-
-                //inserting new term into termviewmodel
-                TermFragment.getTermViewModel().insert(term);
+                saveData();
 
 
-                //creates new notification that displays once term is added
-
-//                Notification.Builder nb = notificationUtils
-//                        .getAndroidChannelNotification(termName.getText().toString(), "Term Starts: " + startDate + " Term Ends: " + endDate);
-//                notificationUtils.getManager().notify(102, nb.build());
-//
-
-                //clears current text in view
-                clear();
-                //changes screen back to termFragment view
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fm.beginTransaction();
-                fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.getTermFragment());
-                fragmentTransaction.commit();
 
             }
         });
@@ -239,6 +213,58 @@ public class AddTermFragment extends Fragment {
         termEnd.setText("");
         termName.setText("");
 
+    }
+
+    public void saveData(){
+        //validation
+        boolean cancel = false;
+
+
+        if (TextUtils.isEmpty(termName.getText())) {
+            termName.setError("Mentor name must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(termStart.getText())) {
+            termStart.setError("Start date must be selected");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(termEnd.getText())) {
+            termEnd.setError("End date must be selected");
+            cancel = true;
+        }
+
+
+        if (cancel) {
+            //Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+            //Toast.makeText(getContext(), "Save Data", Toast.LENGTH_SHORT).show();
+            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+
+            String name = termName.getText().toString();
+            Date startDate = null;
+            Date endDate = null;
+            try {
+                startDate = formatter.parse(termStart.getText().toString());
+                endDate = formatter.parse(termEnd.getText().toString());
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            term = new Term(name, startDate, endDate);
+
+            //inserting new term into termviewmodel
+            TermFragment.getTermViewModel().insert(term);
+
+            //clears current text in view
+            clear();
+            //changes screen back to termFragment view
+            FragmentManager fm = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fm.beginTransaction();
+            fragmentTransaction.replace(R.id.mainFrameLayout, TermMainActivity.getTermFragment());
+            fragmentTransaction.commit();
+
+            clear();
+        }
     }
 
     @Override

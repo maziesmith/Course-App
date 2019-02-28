@@ -7,12 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.jeff.schoolappv2.Assessment.EditAssessmentActivity;
 import com.example.jeff.schoolappv2.Mentor.EditMentorActivity;
+import com.example.jeff.schoolappv2.Mentor.MentorViewFragment;
 import com.example.jeff.schoolappv2.R;
 
 import java.util.ArrayList;
@@ -85,8 +83,6 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.ViewHolder
         private TextView mentorName;
         private TextView mentorPhone;
         private TextView mentorEmail;
-        private ImageButton editMentor;
-        private ImageButton deleteMentor;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -96,32 +92,29 @@ public class MentorAdapter extends RecyclerView.Adapter<MentorAdapter.ViewHolder
             mentorName = itemView.findViewById(R.id.mvMentorNameTV);
             mentorPhone = itemView.findViewById(R.id.mvMentorPhoneTV);
             mentorEmail = itemView.findViewById(R.id.mvMentorEmailTV);
-            editMentor = itemView.findViewById(R.id.mvEditMentorIB);
-            deleteMentor = itemView.findViewById(R.id.mvDeleteMentorIB);
 
 
-            editMentor.setOnClickListener(new View.OnClickListener() {
+            // on click for when mentor is clicked in list edit mentor is opened
+            itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+
+                    int i = getAdapterPosition();
+                    sCurrentMentor = mentorList.get(i);
+
                     Intent intent = new Intent(v.getContext(), EditMentorActivity.class);
                     v.getContext().startActivity(intent);
 
                 }
             });
-
-            deleteMentor.setOnClickListener(new View.OnClickListener() {
+            //on long click mentor is deleted after confirmation dialog
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
-                public void onClick(View v) {
-                    Toast.makeText(v.getContext(), "Delete Mentor Clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
+                public boolean onLongClick(View v) {
 
-
-            // on click for when mentor is clicked in list
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
+                    //add code to alert user of deletion of mentor
+                    MentorViewFragment.getMentorViewModel().delete(sCurrentMentor);
+                    return true;
                 }
             });
 

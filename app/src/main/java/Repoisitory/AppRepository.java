@@ -72,6 +72,8 @@ public class AppRepository {
         return mentorDao.getAllMentorsForCourse(courseId);
     }
 
+
+
     public LiveData<List<Assessment>> getAllAssessmentsByCourse(int courseId) {
         return assessmentDao.getAllAssessmentsForCourse(courseId);
     }
@@ -90,6 +92,8 @@ public class AppRepository {
 
 
     }
+
+
 
 
     public void deleteAllCourses() {
@@ -126,9 +130,15 @@ public class AppRepository {
         new deleteAsyncTaskCourse(courseDao).execute(course);
     }
 
+
+
     public void updateCourse(Course course) {
         new updateAsyncTaskCourse(courseDao).execute(course);
 
+    }
+
+    public void updateAssessment(Assessment assessment) {
+        new updateAsyncTaskAssessment(assessmentDao).execute(assessment);
     }
 
     public void insertAssessment(Assessment assessment) {
@@ -138,11 +148,6 @@ public class AppRepository {
 
     public void deleteAssessment(Assessment assessment) {
         new deleteAsyncTaskAssessment(assessmentDao).execute(assessment);
-    }
-
-    public void updateAssessment(Assessment assessment) {
-        new updateAsyncTaskAssessment(assessmentDao).execute(assessment);
-
     }
 
 
@@ -179,6 +184,21 @@ public class AppRepository {
         }
     }
 
+    //update Assessment
+    private static class updateAsyncTaskAssessment extends AsyncTask<Assessment, Void, Void> {
+        private AssessmentDao assessmentAsyncDao;
+
+        updateAsyncTaskAssessment(AssessmentDao assessmentDao) {
+            assessmentAsyncDao = assessmentDao;
+        }
+
+        @Override
+        protected Void doInBackground(Assessment... assessments) {
+            assessmentAsyncDao.updateAssessment(assessments[0]);
+            return null;
+
+        }
+    }
 
     //update term
     private static class updateAsyncTaskTerm extends AsyncTask<Term, Void, Void> {
@@ -321,23 +341,6 @@ public class AppRepository {
     }
 
 
-    //update Assessment
-    private static class updateAsyncTaskAssessment extends AsyncTask<Assessment, Void, Void> {
-
-        private AssessmentDao asyncTaskAssessmentDao;
-
-        updateAsyncTaskAssessment(AssessmentDao dao) {
-            asyncTaskAssessmentDao = dao;
-        }
-
-        @Override
-        protected Void doInBackground(Assessment... assessments) {
-            asyncTaskAssessmentDao.updateAssessment(assessments[0]);
-            return null;
-        }
-
-    }
-
     // delete course
     private static class deleteAsyncTaskAssessment extends AsyncTask<Assessment, Void, Void> {
 
@@ -413,4 +416,6 @@ public class AppRepository {
 
 
 }
+
+
 

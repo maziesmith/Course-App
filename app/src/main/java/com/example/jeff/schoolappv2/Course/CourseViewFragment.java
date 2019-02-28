@@ -27,7 +27,6 @@ import java.text.SimpleDateFormat;
 import Adapter.AssessmentAdapter;
 import Adapter.CourseAdapter;
 import Adapter.MentorAdapter;
-import Adapter.TermAdapter;
 import Database.AppDatabase;
 
 /**
@@ -55,6 +54,7 @@ public class CourseViewFragment extends Fragment {
     private static MentorViewFragment sMentorViewFragment = new MentorViewFragment();
     private static AddAssessmentFragment sAddAssessmentFragment = new AddAssessmentFragment();
     private static AddMentorFragment sAddMentorFragment = new AddMentorFragment();
+    private static final EditCourseFragment sEditCourseFragment = new EditCourseFragment();
 
 
     private AppDatabase appDatabase;
@@ -66,7 +66,6 @@ public class CourseViewFragment extends Fragment {
     private TextView courseStatus;
     private TextView courseNotes;
     private ImageButton editCourseButton;
-    private ImageButton deleteCourseButton;
     private ImageButton shareNotesButton;
     private Button viewMentorBtn;
     private Button addMentorBtn;
@@ -140,13 +139,11 @@ public class CourseViewFragment extends Fragment {
         //buttons
         editCourseButton = view.findViewById(R.id.courseEditCourseIB);
         shareNotesButton = view.findViewById(R.id.courseShareIB);
-        deleteCourseButton = view.findViewById(R.id.courseDeleteCourseIB);
         viewAssessmentBtn = view.findViewById(R.id.courseViewAssessmentBtn);
         viewMentorBtn = view.findViewById(R.id.courseViewMentorsBtn);
-        addAssessmentBtn = view.findViewById(R.id.addAssessmentBtn);
-        addMentorBtn = view.findViewById(R.id.addMentorBtn);
+
+
         cancelButton = view.findViewById(R.id.courseViewCancelBtn);
-        saveButton = view.findViewById(R.id.courseViewSaveBtn);
 
 
         //inserts currently clicked data into textview
@@ -165,13 +162,12 @@ public class CourseViewFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(v.getContext(), EditCourseActivity.class);
-//                intent.putExtra("courseName", courseName.getText().toString());
-//                intent.putExtra("courseStart", courseStart.getText().toString());
-//                intent.putExtra("courseEnd", courseEnd.getText().toString());
-//                intent.putExtra("courseNotes", courseNotes.getText().toString());
-//                intent.putExtra("courseStatus", courseStatus.getText().toString());
-                v.getContext().startActivity(intent);
+//                Intent intent = new Intent(v.getContext(), EditCourseActivity.class);
+//                v.getContext().startActivity(intent);
+                FragmentManager fm = getFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.courseActivityViewFrame, sEditCourseFragment);
+                ft.commit();
 
             }
         });
@@ -188,17 +184,7 @@ public class CourseViewFragment extends Fragment {
                 startActivity(shareIntent);
             }
         });
-        //add mentor button
-        addMentorBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.courseActivityViewFrame, sAddMentorFragment);
-                ft.commit();
 
-            }
-        });
 
         //view mentor button
         viewMentorBtn.setOnClickListener(new View.OnClickListener() {
@@ -206,7 +192,6 @@ public class CourseViewFragment extends Fragment {
             public void onClick(View v) {
                 FragmentManager fm = getFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.addToBackStack(null);
                 ft.replace(R.id.courseActivityViewFrame, sMentorViewFragment);
                 ft.commit();
 
@@ -214,28 +199,7 @@ public class CourseViewFragment extends Fragment {
             }
         });
 
-        //deletes course and all associated mentors and assessments
-        deleteCourseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                Toast.makeText(v.getContext(), "Term " + TermAdapter.getCurrentTermId(), Toast.LENGTH_SHORT).show();
-
-            }
-        });
-
-
-        //add assessment Button
-        addAssessmentBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.courseActivityViewFrame, sAddAssessmentFragment);
-                ft.commit();
-
-            }
-        });
         // view assessment button
 
         viewAssessmentBtn.setOnClickListener(new View.OnClickListener() {
@@ -248,25 +212,14 @@ public class CourseViewFragment extends Fragment {
 
             }
         });
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().onBackPressed();
+            }
+        });
 
 
-//        if (sMentorAdapter.getItemCount() >= 1){
-//            addMentorBtn.setVisibility(View.INVISIBLE);
-//            viewMentorBtn.setVisibility(View.VISIBLE);
-//        }else{
-//            addMentorBtn.setVisibility(View.VISIBLE);
-//            viewMentorBtn.setVisibility(View.INVISIBLE);
-//
-//        }
-//
-//        if (sAssessmentAdapter.getItemCount() >= 1){
-//            addAssessmentBtn.setVisibility(View.INVISIBLE);
-//            viewAssessmentBtn.setVisibility(View.VISIBLE);
-//        }else{
-//            addAssessmentBtn.setVisibility(View.VISIBLE);
-//            viewAssessmentBtn.setVisibility(View.INVISIBLE);
-//
-//        }
 
 
         return view;

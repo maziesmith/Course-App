@@ -1,5 +1,6 @@
 package com.example.jeff.schoolappv2.Assessment;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -7,9 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.example.jeff.schoolappv2.R;
 
-public class EditAssessmentActivity extends AppCompatActivity {
+public class EditAssessmentActivity extends AppCompatActivity implements EditAssessmentFragment.OnFragmentInteractionListener {
 
-    private static final EditAssessmentFragment sEditAssessmentFragment = new EditAssessmentFragment();
+    private static  EditAssessmentFragment sEditAssessmentFragment = new EditAssessmentFragment();
 
 
     @Override
@@ -26,5 +27,9 @@ public class EditAssessmentActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
+    }
 }
 

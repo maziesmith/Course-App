@@ -4,12 +4,19 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/app_launcher_icon"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/app_launcher_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Course.EditCourseActivity"></activity>
+        <receiver
+            android:name="Alarm.AlarmClass"
+            android:enabled="true"
+            android:exported="true"
+            ></receiver>
+
+        <activity android:name=".Mentor.AddMentorActivity" />
+        <activity android:name=".Assessment.AddAssessmentActivity" />
         <activity android:name=".Term.EditTermActivity" />
         <activity android:name=".Mentor.EditMentorActivity" />
         <activity android:name=".Assessment.EditAssessmentActivity" />
@@ -22,8 +29,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <receiver android:name=".Notification.NotificationPublisher" />
     </application>
 
 </manifest>

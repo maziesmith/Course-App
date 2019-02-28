@@ -1,30 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.ContentFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/assessmentFrameView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/viewAssessmentRV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:paddingBottom="15dp"
+        tools:listitem="@layout/item_assessmentview">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/viewAssessmentRV"
-            android:layout_width="match_parent"
-            android:layout_height="535dp"
-            android:paddingBottom="15dp"
-            tools:listitem="@layout/item_assessmentview">
+    </android.support.v7.widget.RecyclerView>
 
-        </android.support.v7.widget.RecyclerView>
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/assessmentConstraint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/assessmentViewBackBtn"
-            android:layout_width="match_parent"
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/assessmentAddFab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="30dp"
-            android:paddingBottom="15dp"
-            android:text="@string/back" />
-    </LinearLayout>
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.899"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.998"
+            app:srcCompat="@drawable/ic_add_black_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/assesmentBackFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.058"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.996"
+            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.v7.widget.ContentFrameLayout>

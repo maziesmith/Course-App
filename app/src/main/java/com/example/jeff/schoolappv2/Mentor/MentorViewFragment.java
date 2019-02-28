@@ -3,10 +3,14 @@ package com.example.jeff.schoolappv2.Mentor;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.jeff.schoolappv2.Assessment.EditAssessmentActivity;
 import com.example.jeff.schoolappv2.Course.CourseFragment;
 import com.example.jeff.schoolappv2.R;
 
@@ -47,8 +52,13 @@ public class MentorViewFragment extends Fragment {
     private static MentorViewModel sMentorViewModel;
 
 
+
     private RecyclerView mentorRecyclerView;
-    private Button backBtn;
+    private FloatingActionButton backBtn;
+    private FloatingActionButton addBtn;
+
+    private String add = "add";
+
 
 
     private OnFragmentInteractionListener mListener;
@@ -98,7 +108,8 @@ public class MentorViewFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mentorview, container, false);
 
-        backBtn = view.findViewById(R.id.mentorViewBackBtn);
+        backBtn = view.findViewById(R.id.mentorBackFab);
+        addBtn = view.findViewById(R.id.mentorAddFab);
 
         //sets mentor recyclerview
 
@@ -115,6 +126,16 @@ public class MentorViewFragment extends Fragment {
                 sMentorAdapter.setMentors(mentors);
             }
 
+        });
+
+        addBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AddMentorActivity.class);
+
+                v.getContext().startActivity(intent);
+
+            }
         });
 
 

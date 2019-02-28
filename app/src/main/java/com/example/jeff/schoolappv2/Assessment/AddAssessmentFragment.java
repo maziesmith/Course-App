@@ -1,24 +1,26 @@
 package com.example.jeff.schoolappv2.Assessment;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
-import com.example.jeff.schoolappv2.Course.CourseViewActivity;
 import com.example.jeff.schoolappv2.R;
 
 import java.text.DateFormat;
@@ -27,6 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import Adapter.CourseAdapter;
+import Alarm.AlarmClass;
 import DatePicker.DatePickerFragment;
 import Model.Assessment;
 
@@ -54,18 +57,15 @@ public class AddAssessmentFragment extends Fragment {
     private EditText assessmentDueDate;
     private Button cancel;
     private Button save;
+    private CheckBox notificationBox;
 
     private String assessmentType;
-    private  static Assessment sAssessment;
+    private Assessment assessment;
     public static final int REQUEST_CODE = 1;
     private String dueDate;
 
 
     private OnFragmentInteractionListener mListener;
-
-    public  static Assessment getAssessment() {
-        return sAssessment;
-    }
 
 
     public AddAssessmentFragment() {
@@ -114,8 +114,10 @@ public class AddAssessmentFragment extends Fragment {
         radioGroup = view.findViewById(R.id.addRadioGroup);
         objective = view.findViewById(R.id.objectiveRB);
         performance = view.findViewById(R.id.performanceRB);
+        notificationBox = view.findViewById(R.id.addAssessmentAlertCB);
 
-final FragmentManager fmDate = ((AppCompatActivity)getActivity()).getSupportFragmentManager();
+
+        final FragmentManager fmDate = ((AppCompatActivity) getActivity()).getSupportFragmentManager();
 
 
         assessmentDueDate.setOnClickListener(new View.OnClickListener() {
@@ -130,17 +132,11 @@ final FragmentManager fmDate = ((AppCompatActivity)getActivity()).getSupportFrag
         });
 
 
-
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 saveData();
-                clearData();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.courseActivityViewFrame, CourseViewActivity.getCourseViewFragment());
-                ft.commit();
 
 
             }
@@ -150,11 +146,7 @@ final FragmentManager fmDate = ((AppCompatActivity)getActivity()).getSupportFrag
             @Override
             public void onClick(View v) {
                 clearData();
-                FragmentManager fm = getFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.courseActivityViewFrame, CourseViewActivity.getCourseViewFragment());
-                ft.commit();
-
+                getActivity().onBackPressed();
 
             }
         });
@@ -167,7 +159,7 @@ final FragmentManager fmDate = ((AppCompatActivity)getActivity()).getSupportFrag
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK){
+        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             dueDate = data.getStringExtra("selectedDate");
             assessmentDueDate.setText(dueDate);
 
@@ -207,25 +199,58 @@ final FragmentManager fmDate = ((AppCompatActivity)getActivity()).getSupportFrag
 
     public void saveData() {
 
-        //converts date from string to date format
-        DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-        Date dateDate;
-        if (objective.isChecked()) {
-            assessmentType = "Objective";
-        } else if (performance.isChecked()) {
-            assessmentType = "performance";
+        boolean cancel = false;
+
+        if (TextUtils.isEmpty(assessmentName.getText())) {
+            assessmentName.setError("Assessment name must be entered");
+            cancel = true;
+        }
+        if (TextUtils.isEmpty(assessmentDueDate.getText())) {
+            assessmentDueDate.setError("Assessment due date must be selected");
+            cancel = true;
+        }
+        if (!performance.isChecked() && !objective.isChecked()) {
+            performance.setError("Assessment type must be selected");
+            cancel = true;
         }
 
 
-        try {
-            dateDate = formatter.parse(dueDate.toString());
-            sAssessment = new Assessment(CourseAdapter.getCurrentCourseId(), assessmentType, assessmentName.getText().toString(), dateDate);
-            AssessmentViewFragment.getAssessmentViewModel().insert(sAssessment);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (cancel) {
+            // Toast.makeText(getContext(), "Wrong data", Toast.LENGTH_SHORT).show();
+        } else {
+            // Toast.makeText(getContext(), "Save data", Toast.LENGTH_SHORT).show();
+            //converts date from string to date format
+            DateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+            Date dateDate;
+            if (objective.isChecked()) {
+                assessmentType = "Objective";
+            } else if (performance.isChecked()) {
+                assessmentType = "Performance";
+            }
+
+
+            try {
+
+                dateDate = formatter.parse(dueDate.toString());
+                assessment = new Assessment(CourseAdapter.getCurrentCourseId(), assessmentType, assessmentName.getText().toString(), dateDate);
+                if (notificationBox.isChecked()) {
+                    Intent dueIntent = new Intent(getActivity(), AlarmClass.class);
+                    dueIntent.putExtra("name", assessmentName.getText().toString());
+                    dueIntent.putExtra("startDate", "Assessment is Due Today " + dueDate);
+                    PendingIntent startSender = PendingIntent.getBroadcast(getActivity(), 0, dueIntent, 0);
+                    AlarmManager startAlarmManager = (AlarmManager) getActivity().getSystemService(getContext().ALARM_SERVICE);
+                    startAlarmManager.set(AlarmManager.RTC_WAKEUP, dateDate.getTime(), startSender);
+                }
+                AssessmentViewFragment.getAssessmentViewModel().insert(assessment);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            clearData();
+            getActivity().onBackPressed();
+
+
         }
-
-
     }
 
     /**

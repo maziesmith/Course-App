@@ -18,7 +18,7 @@ import Model.Course;
 import Model.Mentor;
 import Model.Term;
 
-@Database(entities = {Assessment.class, Course.class, Mentor.class, Term.class}, version = 4, exportSchema = false)
+@Database(entities = {Assessment.class, Course.class, Mentor.class, Term.class}, version = 8, exportSchema = false)
 @TypeConverters({Converters.class})
 public abstract class AppDatabase extends RoomDatabase {
 
